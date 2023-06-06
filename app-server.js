@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const { check, validationRequest, sanitize } = require("express-validator");
+const { createUser, logInUser } = require("./user-service");
 
 //mongoose.connect("");
 
@@ -17,16 +18,20 @@ app.use((req, res, next) => {
 
 app.disable("x-powered-by")
 
-////////API CODE STARTS HERE
+///////////////////////////////////////////API CODE STARTS HERE
 
-
-app.get("/", (req, res, next) => {
-    console.log("GET")
-    res.status(200).json("hello world")
+// VALIDATION AND SANITIZATION
+app.get("*", (req, res, next) => {
+    // sanitize incoming requests
+    console.log("ENTRY")
+    next()
 });
 
+/////////////////// USER SERVICES ENDPOINTS START
+createUser(app);
+logInUser(app);
+/////////////////// USER SERVICES ENDPOINTS END
 
-
-////////API CODE ENDS HERE
+///////////////////////////////////////////API CODE ENDS HERE
 
 module.exports = app;
