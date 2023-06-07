@@ -7,13 +7,13 @@ const UserSchema = mongoose.Schema({
 
 const userModel = mongoose.model("users", UserSchema);
 
-const createUser = app => {
+const createUser = (app, mongoose) => {
     app.get("/create-user", (req, res) => {
         res.status(200).json("user-service::createUser() called...");
     });
 };
 
-const logInUser = app => {
+const logInUser = (app, mongoose) => {
     app.get("/login-user/", (req, res) => {
         res.status(200).json("user-service::logInUser() called...");
     });
