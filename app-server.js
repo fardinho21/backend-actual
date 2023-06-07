@@ -1,11 +1,17 @@
-const { check, validationRequest, sanitize } = require("express-validator");
-const { createUser, logInUser } = require("./user-service");
-const mongoose = require("mongoose");
+////////////////////// SECURITY START ///////////////////// 
+const { check, validationRequest, sanitize } = require("express-validator"); // Sanitizers
+const bcrypt = require("bcrypt"); // encryption
+const jwt = require("jsonwebtoken"); // cookies/tokens
+const fs = require("fs"); // filesystem
+// const private_key = fs.readFIleSync(_dirname+"/path/to/pk.pem")// for https
+///////////////////// SECURITY END ////////////////////// 
 
-const express = require("express");
+///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
+const { createUser, logInUser } = require("./user-service"); // API endpoints
+const mongoose = require("mongoose"); // database
+// mongoose.connect("");
+const express = require("express"); // backend framework
 const app = express();
-
-//mongoose.connect("");
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -16,11 +22,9 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
     next();
 });
-
 app.disable("x-powered-by")
-
-///////////////////////////////////////////API CODE STARTS HERE
-
+/////////////////////////////////// APPLICATION BOILERPLATE END /////////////////////////////////////////////////// 
+/////////////////////// API CODE STARTS HERE ////////////////////
 // VALIDATION AND SANITIZATION
 app.get("*", (req, res, next) => {
     // sanitize incoming requests
@@ -32,7 +36,7 @@ app.get("*", (req, res, next) => {
 createUser(app, mongoose);
 logInUser(app, mongoose);
 /////////////////// USER SERVICES ENDPOINTS END
+/////////////////////// API CODE ENDS HERE ////////////////////
 
-///////////////////////////////////////////API CODE ENDS HERE
-
+// EXPORTS
 module.exports = app;
