@@ -1,0 +1,6 @@
+Generic Command Format:
+curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/create-user
+curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/login-user
+
+Command With Encryption: TODO- differnce between the --key --cert and --ssl flags
+curl --key <key.pem> -X POST -H "Content-Type: application/json" -d '{"data":1234}' <url>

@@ -8,7 +8,8 @@ const UserSchema = mongoose.Schema({
 const userModel = mongoose.model("users", UserSchema);
 
 const createUser = (app, mongoose) => {
-    app.post("/create-user", (req, res) => {
+    app.post("/create-user/", (req, res) => {
+        console.log(req.body);
         res.status(200).json("user-service::createUser() called...");
     });
 };
