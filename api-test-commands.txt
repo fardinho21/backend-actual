@@ -14,9 +14,33 @@ Command With JWT Authorization:
 
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer your_token_value" --insecure -d '{"data":1234}' http://localhost:8080/create-user
 
-Generating and Decoding JWT with CLI:
+Creating a JWT:
 
-jwt sign --secret <your_secret_key> --sub <subject> --exp <expiry_time> --your-claim1 <value1> --your-claim2 <value2>
-jwt sign --secret "$(cat test-cert.pem | grep -vP "(-----.+-----)")" --sub <subject> --exp <expiration>
-jwt decode <your_jwt>
-jwt decode eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlX3VzZXIiLCJleHAiOjE2MjM1NzI0NzB9.8DzDh2JwG6efct2Mw9Os8FlRraEnuWVJro3khV7oDkQ
+There are three parts to a JWT. Both the HEADER and PAYLOAD are encoded in Base64Url
+
+HEADER.PAYLOAD.SIGNATURE
+
+HEADER - defines the signing algorithm used and type of token. Supported algorithms are HS256, RS256
+
+    {
+        "alg":<signing_algorithm>,
+        "typ":"JWT"
+    }
+
+PAYLOAD - defines "claims" which are custom or pre-defined data fields
+        refer to https://www.iana.org/assignments/jwt/jwt.xhtml a registry containing a list of predfiend claims.
+    {
+        // predefined 
+        "iss":<issuer>,
+        "exp":<expiration>,
+        "sub":<subject>,
+        "aud":<audience>,
+        //public
+            ...
+        //private
+            ...
+    }   
+SIGNATURE - Created using the encoded HEADER and PAYLOAD as well using the signing algorithm
+
+The package basez needs to be installed in order to use base64url encodings. Once installed use the following to encode the HEADER and PAYLOAD
+echo -n <HEADER or PAYLOAD> | base64url
