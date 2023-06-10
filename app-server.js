@@ -1,6 +1,6 @@
 ////////////////////// SECURITY START ///////////////////// 
 const { check, validationRequest, sanitize } = require("express-validator"); // Sanitizers
-const bcrypt = require("bcrypt"); // encryption
+const bcrypt = require("bcrypt"); // password hashing
 const jwt = require("jsonwebtoken"); // cookies/tokens
 const fs = require("fs"); // filesystem
 // const private_key = fs.readFIleSync(_dirname+"/path/to/pk.pem")// for https

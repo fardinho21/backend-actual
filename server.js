@@ -1,7 +1,13 @@
 const fs = require("fs");
-const app = require("./app-server");
 const http = require("http");
+// const https = require("https");
+const app = require("./app-server");
 const port = parseInt(process.env.PORT) || 8080;
+
+const options = {
+    key: fs.readFileSync('./no-pass-key.pem'),
+    cert: fs.readFileSync('./test-cert.pem')
+}
 
 
 const onListening = () => {
@@ -16,6 +22,8 @@ app.set("port", port);
 
 
 const server = http.createServer(app);
+
+// const server = https.createServer(options, app)
 
 server.on("listening", onListening)
 server.on("error", onError);

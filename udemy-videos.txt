@@ -1,0 +1,11 @@
+Angular & NodeJS - The MEAN Stack Guide
+    Section 8
+        video 98 mongoose validators
+        video 99 bcrypt password hashing
+        video 102 authentication using JWT
+
+Security in Node.js with Express and Angular
+    Section 2
+        Video 19 XSS defense with input handling (sanitization) in Node.js
+    Section 3
+        video 29 and 30 generating self-signed certs and implementing HTTPS

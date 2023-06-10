@@ -1,6 +1,22 @@
-Generic Command Format:
+Generic Command Format:    
+    Any data related to the HTTP request itself should be sent using the -d flag in curl.
+        - This is usecase specific data meaning it depends on what the application or endpoint is doing.
+
 curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/create-user
 curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/login-user
 
-Command With Encryption: TODO- differnce between the --key --cert and --ssl flags
-curl --key <key.pem> -X POST -H "Content-Type: application/json" -d '{"data":1234}' <url>
+Command With Encryption:
+curl --key <key.pem> --cert <path/to/cert> -X POST -H "Content-Type: application/json" -d '{"data":1234}' <url>
+
+Command With JWT Authorization: 
+    Anything related to identity information or finances should be sent in a JWT
+        - This is client specific data
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer your_token_value" --insecure -d '{"data":1234}' http://localhost:8080/create-user
+
+Generating and Decoding JWT with CLI:
+
+jwt sign --secret <your_secret_key> --sub <subject> --exp <expiry_time> --your-claim1 <value1> --your-claim2 <value2>
+jwt sign --secret "$(cat test-cert.pem | grep -vP "(-----.+-----)")" --sub <subject> --exp <expiration>
+jwt decode <your_jwt>
+jwt decode eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlX3VzZXIiLCJleHAiOjE2MjM1NzI0NzB9.8DzDh2JwG6efct2Mw9Os8FlRraEnuWVJro3khV7oDkQ
