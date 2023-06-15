@@ -1,13 +1,5 @@
-////////////////////// SECURITY START ///////////////////// 
-const { check, validationRequest, sanitize } = require("express-validator"); // Sanitizers
-const bcrypt = require("bcrypt"); // password hashing
-const jwt = require("jsonwebtoken"); // cookies/tokens
-const fs = require("fs"); // filesystem
-// const private_key = fs.readFIleSync(_dirname+"/path/to/pk.pem")// for https
-///////////////////// SECURITY END ////////////////////// 
-
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
-const { createUser, logInUser } = require("./user-service"); // API endpoints
+const { createUser, logInUser, logOutUser } = require("./user-service"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
 const express = require("express"); // backend framework
@@ -25,7 +17,7 @@ app.use((req, res, next) => {
 app.disable("x-powered-by")
 /////////////////////////////////// APPLICATION BOILERPLATE END /////////////////////////////////////////////////// 
 /////////////////////// API CODE STARTS HERE ////////////////////
-// VALIDATION AND SANITIZATION
+
 app.get("*", (req, res, next) => {
     // sanitize incoming requests
     console.log("ENTRY");

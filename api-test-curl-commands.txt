@@ -1,0 +1,4 @@
+
+SENDING JWT HEADER AND PAYLOAD
+
+curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"}}' http://localhost:8080/create-user

@@ -1,0 +1,2 @@
+{"alg":"HS256","typ":"JWT"}
+{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"}

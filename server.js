@@ -4,10 +4,10 @@ const http = require("http");
 const app = require("./app-server");
 const port = parseInt(process.env.PORT) || 8080;
 
-const options = {
-    key: fs.readFileSync('./no-pass-key.pem'),
-    cert: fs.readFileSync('./test-cert.pem')
-}
+// const options = {
+//     key: fs.readFileSync('./no-pass-key.pem'),
+//     cert: fs.readFileSync('./test-cert.pem')
+// }
 
 
 const onListening = () => {
