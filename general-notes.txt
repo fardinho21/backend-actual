@@ -13,7 +13,7 @@ Command With JWT Authorization:
     Anything related to identity information or finances should be sent in a JWT
         - This is client specific data
 
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer your_token_value" --insecure -d '{"data":1234}' http://localhost:8080/create-user
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0.6Br15KPCCGuSZB5eY4LveJAwsi2EtaysyO51OhInxxY" --insecure -d '{"data":1234}' http://localhost:8080/login-user
 
 Creating a JWT:
 
