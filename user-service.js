@@ -1,4 +1,4 @@
-const { check, validationResult } = require("express-validator");
+const { check, body, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const {jwtHelper} = require("./jwt-service.js");
 
@@ -20,7 +20,15 @@ const userModel = mongoose.model("users", UserSchema);
 // SANITIZERS AND VALIDATORS
 var sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(),
                       check('payload', "Payload must be an object.").isObject()];
-var sanitizeAuthorization = [check('authorization').contains]
+
+const sanitizeToken = body('authorization').custom(token => {
+    const regex = /(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/
+    if (!regex.test(token))    
+        throw new Error("Invalid token format.")
+    return true;
+
+});
+var sanitizeAuthorization = [check("authorization", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
 // API END POINTS
 
@@ -59,6 +67,8 @@ const logInUser = (app, mongoose) => {
         
         if (errors.isEmpty())
         {
+            res.status(200).json("Request sanitized.");
+
             // check existing data element in database
 
             // TOKEN AUTHENTICATION --  DO NOT DELETE
@@ -91,6 +101,8 @@ const logOutUser = (app, mongoose) => {
         
         if (error.isEmpty())
         {
+            res.status(200).json("Request sanitized.");
+
             // check existing data element in database
             // jwtHelper.jwtAuthenticateToken(req.headers.authorization)
             // .then(authentic => {
