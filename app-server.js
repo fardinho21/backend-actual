@@ -18,11 +18,6 @@ app.disable("x-powered-by")
 /////////////////////////////////// APPLICATION BOILERPLATE END /////////////////////////////////////////////////// 
 /////////////////////// API CODE STARTS HERE ////////////////////
 
-app.get("*", (req, res, next) => {
-    // sanitize incoming requests
-    console.log("ENTRY");
-    next();
-});
 
 /////////////////// USER SERVICES ENDPOINTS START
 createUser(app, mongoose);
