@@ -7,35 +7,30 @@ const bcrypt = require("bcrypt");
 
 
 // DATA BASE SCHEMAS AND MODELS
-mongoose.connect("mongodb://localhost:27017");
+mongoose.connect("mongodb://localhost:27017/local");
 
 const UserSchema = mongoose.Schema({
     userName: String,
     passwordHash: String,
     authentication: String,
-    expires: Date
+    expires: String
 });
 
 const userModel = mongoose.model("users", UserSchema);
 
 
 // SANITIZERS AND VALIDATORS
-var sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(),
+const sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(),
                       check('payload', "Payload must be an object.").isObject()];
+const sanitizeToken = check('authorization').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
+const sanitizeAuthorization = [check("authorization", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
-const sanitizeToken = body('authorization').custom(token => {
-    const regex = /(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/
-    if (!regex.test(token))    
-        throw new Error("Invalid token format.")
-    return true;
-
-});
-var sanitizeAuthorization = [check("authorization", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
+const sanitizeCreateUserRequest = [check('username').isLength({max:15,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
 
 // API END POINTS
 
 const createUser = (app, mongoose) => {
-    app.post("/create-user/", sanitizeHeaderPayload, (req, res) => {
+    app.post("/create-user/", sanitizeCreateUserRequest, (req, res) => {
 
         // sanitize the request
         const errors = validationResult(req);
@@ -43,6 +38,7 @@ const createUser = (app, mongoose) => {
         if (errors.isEmpty())
         {
             //Check for existing user in database
+
             
             res.status(200).json("Request sanitized.");
 

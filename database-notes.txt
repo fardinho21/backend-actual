@@ -7,10 +7,16 @@ To enter mongodb shell
 
 Commands while in shell
     show dbs
+    show collections
     use <database name> // create and/or use database
     db.<command>
+      .createCollection()
+      .getCollectionNames()
     cls
     exit
+
+    db.collection.insertOne()
+    db.collection.find()
 
 Database 
 {

@@ -3,7 +3,9 @@ Generic Command Format:
         - This is usecase specific data meaning it depends on what the application or endpoint is doing.
 
 curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/create-user
-curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"}}' http://localhost:8080/create-user
+
+curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"},"username":"genericUser0","password": "password1234!"}' http://localhost:8080/create-user
+
 curl -X POST -H "Content-Type: application/json" -d '{"header":"hello","payload":"world"}' http://localhost:8080/create-user
 curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/login-user
 
@@ -15,6 +17,7 @@ Command With JWT Authorization:
         - This is client specific data
 
 curl -X POST -H "Content-Type: application/json" --insecure -d '{"authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0.6Br15KPCCGuSZB5eY4LveJAwsi2EtaysyO51OhInxxY"}' http://localhost:8080/login-user
+
 curl -X POST -H "Content-Type: application/json" --insecure -d '{"authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0"}' http://localhost:8080/login-user
 Creating a JWT:
 
