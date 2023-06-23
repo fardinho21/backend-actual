@@ -7,6 +7,8 @@ const bcrypt = require("bcrypt");
 
 
 // DATA BASE SCHEMAS AND MODELS
+mongoose.connect("mongodb://localhost:27017");
+
 const UserSchema = mongoose.Schema({
     userName: String,
     passwordHash: String,
@@ -41,6 +43,7 @@ const createUser = (app, mongoose) => {
         if (errors.isEmpty())
         {
             //Check for existing user in database
+            
             res.status(200).json("Request sanitized.");
 
             // TOKEN GENERATION --  DO NOT DELETE

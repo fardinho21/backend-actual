@@ -1,0 +1,21 @@
+To start/stop the database server
+    sudo systemctl start mongod.service
+    sudo systemctl stop mongod.service
+
+To enter mongodb shell
+    mongo
+
+Commands while in shell
+    show dbs
+    use <database name> // create and/or use database
+    db.<command>
+    cls
+    exit
+
+Database 
+{
+    Collection1{Document1 Document2 ... Document N} 
+    Collection2{...} 
+    ... 
+    Collection3{...}
+}

@@ -3,6 +3,9 @@ Angular & NodeJS - The MEAN Stack Guide
         video 98 mongoose validators
         video 99 bcrypt password hashing
         video 102 authentication using JWT
+    Section 4
+        video 48 Setting up mongodb
+        
 
 Security in Node.js with Express and Angular
     Section 2
