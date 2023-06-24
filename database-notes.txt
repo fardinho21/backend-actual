@@ -18,6 +18,10 @@ Commands while in shell
     db.collection.insertOne()
     db.collection.find()
 
+Monitoring Commands
+    mongostat 
+    mongotop
+
 Database 
 {
     Collection1{Document1 Document2 ... Document N} 

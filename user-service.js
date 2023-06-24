@@ -2,8 +2,7 @@ const { check, body, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const {jwtHelper} = require("./jwt-service.js");
 
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const {bcryptHelper} = require("./bcrypt-service.js");
 
 
 // DATA BASE SCHEMAS AND MODELS
@@ -25,12 +24,12 @@ const sanitizeHeaderPayload = [check('header', "Header must be an object.").isOb
 const sanitizeToken = check('authorization').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
 const sanitizeAuthorization = [check("authorization", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
-const sanitizeCreateUserRequest = [check('username').isLength({max:15,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
+const sanitizeCreateUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
 
 // API END POINTS
 
-const createUser = (app, mongoose) => {
-    app.post("/create-user/", sanitizeCreateUserRequest, (req, res) => {
+const createUserRequest = (app, mongoose) => {
+    app.post("/create-user-request/", sanitizeCreateUserRequest, (req, res, next) => {
 
         // sanitize the request
         const errors = validationResult(req);
@@ -38,24 +37,35 @@ const createUser = (app, mongoose) => {
         if (errors.isEmpty())
         {
             //Check for existing user in database
-
-            
-            res.status(200).json("Request sanitized.");
-
-            // TOKEN GENERATION --  DO NOT DELETE
-            // jwtHelper.jwtGenerateToken(req.body.header,req.body.payload)
-            // .then(data => {
-            //     console.log(data)
-            //     res.status(200).json(data);
-            // });
+            userModel.exists({userName:req.body.username})
+            .then(dcmnt => {dcmnt == null ? next() : res.status(500).json("Error handling request - Username taken")}, 
+                  err => {res.status(500).json("Error handling request")});
         }
         else
         {
-            console.log(errors);
-            res.status(500).json("Error handling request!");
+            res.status(500).json("Error handling request - Username invalid")
         }
 
-    });
+    }, createUser)
+};
+
+const createUser = (req, res, next) => {
+    var tempPayload = req.body.payload;
+    tempPayload.userName = req.body.username;
+    tempPayload.passHash = bcryptHelper.generatePassHash(req.body.password)
+    .then(hash =>{
+        jwtHelper.jwtGenerateToken(req.body.header, tempPayload)
+            .then(data => {
+                res.status(200).json("backend::createUser() called")
+                console.log(data);
+            }, err => {
+                console.log(err)
+                res.status(500).json("Error handling request")
+            });
+     });
+    
+    
+
 };
 
 const logInUser = (app, mongoose) => {
@@ -126,4 +136,4 @@ const logOutUser = (app, mongoose) => {
     });
 };
 
-module.exports = {createUser, logInUser, logOutUser};
+module.exports = {createUserRequest, logInUser, logOutUser};
