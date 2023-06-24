@@ -74,30 +74,18 @@ const createUser = (req, res, next) => {
 
 };
 
-const logInUser = (app, mongoose) => {
-    app.post("/login-user/", sanitizeAuthorization, (req, res) => {
+const logInUserRequest = (app, mongoose) => {
+    app.post("/login-user-request/", sanitizeAuthorization, (req, res, next) => {
         
         // sanitize the request
         const errors = validationResult(req);
         
         if (errors.isEmpty())
         {
-            res.status(200).json("Request sanitized.");
-
             // check existing data element in database
-
-            // TOKEN AUTHENTICATION --  DO NOT DELETE
-            // jwtHelper.jwtAuthenticateToken(req.body.authorization)
-            // .then(authentic => {
-                //     if (!authentic)
-                //     {
-                    //         res.status(403).json("Not Authentic")
-                    //     }
-            //     else 
-            //     {
-            //         res.status(200).json("Authentication Success")
-            //     }
-            // });
+            userModel.exists({userName:req.body.username})
+            .then(dcmnt => {dcmnt == null ? res.status(500).json("Error handling request - Username does not exist") : next() }, 
+                  err => {res.status(500).json("Error handling request")});
         }
         else
         {
@@ -105,11 +93,26 @@ const logInUser = (app, mongoose) => {
             res.status(500).json("Error handling request!");
         }
 
-    });
+    }, logInUser);
 };
 
-const logOutUser = (app, mongoose) => {
-    app.post("/logout-user/", sanitizeAuthorization, (req, res) => {
+const logInUser = (req, res) => {
+    // TOKEN AUTHENTICATION --  DO NOT DELETE
+    // jwtHelper.jwtAuthenticateToken(req.body.authorization)
+    // .then(authentic => {
+        //     if (!authentic)
+        //     {
+            //         res.status(403).json("Not Authentic")
+            //     }
+    //     else 
+    //     {
+    //         res.status(200).json("Authentication Success")
+    //     }
+    // });
+};
+
+const logOutUserRequest = (app, mongoose) => {
+    app.post("/logout-user-request/", sanitizeAuthorization, (req, res, next) => {
         
         // sanitize the request
         const error = validationResult(req)
@@ -119,19 +122,10 @@ const logOutUser = (app, mongoose) => {
             res.status(200).json("Request sanitized.");
 
             // check existing data element in database
-            // jwtHelper.jwtAuthenticateToken(req.headers.authorization)
-            // .then(authentic => {
-            //     // if token not verified return 403 error
-            //     if (!authentic)
-            //     {
-            //         res.status(403).json("Not Authentic")
-            //     }
-            //     else 
-            //     {
-                //         res.status(200).json("Authentication Success");
-            //     }
-            //     // if token is verified logOut the user 
-            // });
+            userModel.exists({userName:req.body.username})
+            .then(dcmnt => {dcmnt == null ? res.status(500).json("Error handling request - Username does not exist") : next()}, 
+                  err => {res.status(500).json("Error handling request")});
+
         }
         else
         {   
@@ -139,7 +133,23 @@ const logOutUser = (app, mongoose) => {
             res.status(500).json("Error handling request!");
         }
 
-    });
+    }, logOutUser);
+};
+
+const logOutUser = (req, res) => {
+    // jwtHelper.jwtAuthenticateToken(req.headers.authorization)
+    // .then(authentic => {
+    //     // if token not verified return 403 error
+    //     if (!authentic)
+    //     {
+    //         res.status(403).json("Not Authentic")
+    //     }
+    //     else 
+    //     {
+        //         res.status(200).json("Authentication Success");
+    //     }
+    //     // if token is verified logOut the user 
+    // });
 };
 
 module.exports = {createUserRequest, logInUser, logOutUser};
