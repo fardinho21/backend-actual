@@ -57,12 +57,12 @@ const createUser = (req, res, next) => {
         tempPayload.passwordHash = hash;
         jwtHelper.jwtGenerateToken(req.body.header, tempPayload)
             .then(token => {
-                // res.status(200).json("backend::createUser() called")
                 let d = new Date();
                 d.setMinutes(90);
-                let parts = [...(d.toString().split(" "))]
+                let parts = d.toString().split(" ");
 
                 userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: token, expires: parts[1] + " " + parts[2] + " " + parts[4]});
+                console.log("backend::createUser() called")
                 res.status(200).json({tkn:token});
             }, err => {
                 console.log(err)
