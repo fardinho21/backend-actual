@@ -1,5 +1,5 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
-const { createUserRequest, logInUser, logOutUser } = require("./user-service"); // API endpoints
+const { createUserRequest, logInUserRequest, logOutUserRequest } = require("./user-service"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
 const express = require("express"); // backend framework
@@ -21,7 +21,8 @@ app.disable("x-powered-by")
 
 /////////////////// USER SERVICES ENDPOINTS START
 createUserRequest(app, mongoose);
-logInUser(app, mongoose);
+logInUserRequest(app, mongoose);
+logOutUserRequest(app, mongoose);
 /////////////////// USER SERVICES ENDPOINTS END
 /////////////////////// API CODE ENDS HERE ////////////////////
 

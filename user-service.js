@@ -119,13 +119,10 @@ const logOutUserRequest = (app, mongoose) => {
         
         if (error.isEmpty())
         {
-            res.status(200).json("Request sanitized.");
-
             // check existing data element in database
             userModel.exists({userName:req.body.username})
             .then(dcmnt => {dcmnt == null ? res.status(500).json("Error handling request - Username does not exist") : next()}, 
                   err => {res.status(500).json("Error handling request")});
-
         }
         else
         {   
@@ -152,4 +149,4 @@ const logOutUser = (req, res) => {
     // });
 };
 
-module.exports = {createUserRequest, logInUser, logOutUser};
+module.exports = {createUserRequest, logInUserRequest, logOutUserRequest};
