@@ -14,7 +14,8 @@ const jwtGenerateToken = (header, payload) => {
         const hmac = crypto.createHmac("sha256", tempkey);
         let hashedTemp = hmac.update(hashThis);
         const hashed = hashedTemp.digest('base64url');
-        return {header:tempheader, payload: temppayload, signature: hashed}
+        return hashThis+"."+hashed
+        // return {header:tempheader, payload: temppayload, signature: hashed}
     }, err => {throw new Error("Server Error - ", err)})
 };
 

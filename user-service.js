@@ -52,15 +52,21 @@ const createUserRequest = (app, mongoose) => {
 const createUser = (req, res, next) => {
     var tempPayload = req.body.payload;
     tempPayload.userName = req.body.username;
-    tempPayload.passHash = bcryptHelper.generatePassHash(req.body.password)
+    bcryptHelper.generatePassHash(req.body.password)
     .then(hash =>{
+        tempPayload.passwordHash = hash;
         jwtHelper.jwtGenerateToken(req.body.header, tempPayload)
-            .then(data => {
-                res.status(200).json("backend::createUser() called")
-                console.log(data);
+            .then(token => {
+                // res.status(200).json("backend::createUser() called")
+                let d = new Date();
+                d.setMinutes(90);
+                let parts = [...(d.toString().split(" "))]
+
+                userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: token, expires: parts[1] + " " + parts[2] + " " + parts[4]});
+                res.status(200).json({tkn:token});
             }, err => {
                 console.log(err)
-                res.status(500).json("Error handling request")
+                res.status(500).json("Error handling request - Internal Server Error")
             });
      });
     
