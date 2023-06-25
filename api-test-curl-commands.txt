@@ -3,6 +3,6 @@ SENDING JWT HEADER AND PAYLOAD
 
 curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"},"username":"genericUser0","password": "password1234!"}' http://localhost:8080/create-user-request
 
-curl -X POST -H "Content-Type: application/json" -d '{"authorization":"<TOKEN HERE>"}' http://localhost:8080/login-user-request
+curl -X POST -H "Content-Type: application/json" -d '{"username":"genericUser0", "password":"password1234!"}' http://localhost:8080/login-user-request
 
 curl -X POST -H "Content-Type: application/json" -d '{"authorization":"<TOKEN HERE>"}' http://localhost:8080/logout-user-request

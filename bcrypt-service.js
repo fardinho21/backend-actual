@@ -1,11 +1,13 @@
-const util = require("node:util");
-const exec = util.promisify(require('node:child_process').exec);
 const bcrypt = require("bcrypt");
 
 const generatePassHash = (pw) => {
     return bcrypt.hash(pw, 0);
 }
 
-const bcryptHelper =  {generatePassHash}
+const comparePassAndHash = (pw, hsh) => {
+    return bcrypt.compare(pw, hsh);
+}
+
+const bcryptHelper =  {generatePassHash, comparePassAndHash}
 
 module.exports = {bcryptHelper};

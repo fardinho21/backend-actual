@@ -37,9 +37,19 @@ const createUserRequest = (app, mongoose) => {
         if (result.isEmpty())
         {
             //Check for existing user in database
-            userModel.exists({userName:req.body.username})
-            .then(dcmnt => {dcmnt == null ? next() : res.status(500).json("Error handling request - Username taken")}, 
-                  err => {res.status(500).json("Error handling request")});
+            userModel.find({userName:req.body.username})
+            .then(data => {
+                if (data == null) 
+                {
+                    next()
+                }
+                else
+                {
+                    res.status(500).json("Error handling request - Username taken");
+                }
+            }, err => {
+                res.status(500).json("Error handling request - Database error")
+            })
         }
         else
         {
@@ -50,9 +60,7 @@ const createUserRequest = (app, mongoose) => {
     }, createUser)
 };
 
-// TODO: 
-// TODO: Do not response with a token. Respond with a success message.
-const createUser = (req, res, next) => {
+const createUser = (req, res) => {
     var tempPayload = req.body.payload;
     tempPayload.userName = req.body.username;
     bcryptHelper.generatePassHash(req.body.password)
@@ -75,7 +83,7 @@ const createUser = (req, res, next) => {
 };
 
 const logInUserRequest = (app, mongoose) => {
-    app.post("/login-user-request/", sanitizeAuthorization, (req, res, next) => {
+    app.post("/login-user-request/", sanitizeCreateUserRequest, (req, res, next) => {
         
         // sanitize the request
         const result = validationResult(req);
@@ -83,32 +91,48 @@ const logInUserRequest = (app, mongoose) => {
         if (result.isEmpty())
         {
             // check existing data element in database
-            userModel.exists({userName:req.body.username})
-            .then(dcmnt => {dcmnt == null ? res.status(500).json("Error handling request - Username does not exist") : next() }, 
-                  err => {res.status(500).json("Error handling request - Database error")});
+            userModel.find({userName:req.body.username})
+            .then(data => {
+                if (data == null)
+                {
+                    res.status(500).json("Error handling request - Username does not exist")
+                }
+                else
+                {
+                    req.body.hash = data[0].passwordHash
+                    next();
+                }
+
+            }, err => {
+                console.log(err)
+                res.status(500).json("Error handling request - Database error")
+            });
         }
         else
         {
             console.log(result);
-            res.status(500).json("Error handling request - Validation error");
+            res.status(500).json("Error handling request: " + result.errors[0].path + " invalid");
         }
 
     }, logInUser);
 };
 
 const logInUser = (req, res) => {
-    // TOKEN AUTHENTICATION --  DO NOT DELETE
-    // jwtHelper.jwtAuthenticateToken(req.body.authorization)
-    // .then(authentic => {
-        //     if (!authentic)
-        //     {
-            //         res.status(403).json("Not Authentic")
-            //     }
-    //     else 
-    //     {
-    //         res.status(200).json("Authentication Success")
-    //     }
-    // });
+    bcryptHelper.comparePassAndHash(req.body.password, req.body.hash)
+    .then(result=> {
+        if (result)
+        {
+            //TODO: Respond with token
+            res.status(200).json("User login success")
+        }
+        else 
+        {
+            res.status(403).json("Login failed - Invalid password")
+        }
+    }, err => {
+        console.log(err);
+        res.status(500).json("Error handling request - Server Error!");
+    });
 };
 
 const logOutUserRequest = (app, mongoose) => {
@@ -120,14 +144,22 @@ const logOutUserRequest = (app, mongoose) => {
         if (error.isEmpty())
         {
             // check existing data element in database
-            userModel.exists({userName:req.body.username})
-            .then(dcmnt => {dcmnt == null ? res.status(500).json("Error handling request - Username does not exist") : next()}, 
-                  err => {res.status(500).json("Error handling request")});
+            userModel.find({userName:req.body.username})
+            .then(data => {
+                if (data == null) {
+                    res.status(500).json("Error handling request - Username does not exist");
+                }
+                else {
+                    next()
+                }
+            }, err => {
+                res.status(500).json("Error handling request - Database error")
+            })
         }
         else
         {   
             console.log(errors);
-            res.status(500).json("Error handling request!");
+            res.status(500).json("Error handling request: " + result.errors[0].path + " invalid");            
         }
 
     }, logOutUser);
