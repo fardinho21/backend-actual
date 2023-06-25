@@ -24,7 +24,7 @@ const sanitizeHeaderPayload = [check('header', "Header must be an object.").isOb
 const sanitizeToken = check('authorization').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
 const sanitizeAuthorization = [check("authorization", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
-const sanitizeCreateUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
+const sanitizeCreateUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6})]
 
 // API END POINTS
 
@@ -32,9 +32,9 @@ const createUserRequest = (app, mongoose) => {
     app.post("/create-user-request/", sanitizeCreateUserRequest, (req, res, next) => {
 
         // sanitize the request
-        const errors = validationResult(req);
+        const result = validationResult(req);
 
-        if (errors.isEmpty())
+        if (result.isEmpty())
         {
             //Check for existing user in database
             userModel.exists({userName:req.body.username})
@@ -43,54 +43,54 @@ const createUserRequest = (app, mongoose) => {
         }
         else
         {
-            res.status(500).json("Error handling request - Username invalid")
+            console.log(result)
+            res.status(500).json("Error handling request: " + result.errors[0].path + " invalid")
         }
 
     }, createUser)
 };
 
+// TODO: 
+// TODO: Do not response with a token. Respond with a success message.
 const createUser = (req, res, next) => {
     var tempPayload = req.body.payload;
     tempPayload.userName = req.body.username;
     bcryptHelper.generatePassHash(req.body.password)
     .then(hash =>{
         tempPayload.passwordHash = hash;
-        jwtHelper.jwtGenerateToken(req.body.header, tempPayload)
-            .then(token => {
-                let d = new Date();
-                d.setMinutes(90);
-                let parts = d.toString().split(" ");
 
-                userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: token, expires: parts[1] + " " + parts[2] + " " + parts[4]});
-                console.log("backend::createUser() called")
-                res.status(200).json({tkn:token});
-            }, err => {
-                console.log(err)
-                res.status(500).json("Error handling request - Internal Server Error")
-            });
+        userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:""})
+        .then(data => {
+            console.log(data);
+            res.status(200).json("User created!");
+        }, err => {
+            console.log(err)
+            res.status(500).json("Error handling request - Database error")  
+        });            
+     }, err => {
+        console.log(err)
+        res.status(500).json("Error handling request - Server Error") 
      });
     
-    
-
 };
 
 const logInUserRequest = (app, mongoose) => {
     app.post("/login-user-request/", sanitizeAuthorization, (req, res, next) => {
         
         // sanitize the request
-        const errors = validationResult(req);
+        const result = validationResult(req);
         
-        if (errors.isEmpty())
+        if (result.isEmpty())
         {
             // check existing data element in database
             userModel.exists({userName:req.body.username})
             .then(dcmnt => {dcmnt == null ? res.status(500).json("Error handling request - Username does not exist") : next() }, 
-                  err => {res.status(500).json("Error handling request")});
+                  err => {res.status(500).json("Error handling request - Database error")});
         }
         else
         {
-            console.log(errors);
-            res.status(500).json("Error handling request!");
+            console.log(result);
+            res.status(500).json("Error handling request - Validation error");
         }
 
     }, logInUser);
