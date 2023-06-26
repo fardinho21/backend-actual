@@ -21,24 +21,23 @@ const userModel = mongoose.model("users", UserSchema);
 // SANITIZERS AND VALIDATORS
 const sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(),
                       check('payload', "Payload must be an object.").isObject()];
-const sanitizeToken = check('authorization').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
-const sanitizeAuthorization = [check("authorization", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
+const sanitizeToken = check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
+const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
-const sanitizeCreateUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6})]
-
+const sanitizeUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
 // API END POINTS
 
 const createUserRequest = (app, mongoose) => {
-    app.post("/create-user-request/", sanitizeCreateUserRequest, (req, res, next) => {
-
+    app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {
         // sanitize the request
         const result = validationResult(req);
 
         if (result.isEmpty())
         {
             //Check for existing user in database
-            userModel.find({userName:req.body.username})
+            userModel.exists({userName:req.body.username})
             .then(data => {
+                console.log(data == null)
                 if (data == null) 
                 {
                     next()
@@ -48,6 +47,7 @@ const createUserRequest = (app, mongoose) => {
                     res.status(500).json("Error handling request - Username taken");
                 }
             }, err => {
+                console.log(err)
                 res.status(500).json("Error handling request - Database error")
             })
         }
@@ -69,7 +69,6 @@ const createUser = (req, res) => {
 
         userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:""})
         .then(data => {
-            console.log(data);
             res.status(200).json("User created!");
         }, err => {
             console.log(err)
@@ -83,7 +82,7 @@ const createUser = (req, res) => {
 };
 
 const logInUserRequest = (app, mongoose) => {
-    app.post("/login-user-request/", sanitizeCreateUserRequest, (req, res, next) => {
+    app.post("/login-user-request/", sanitizeUserRequest, (req, res, next) => {
         
         // sanitize the request
         const result = validationResult(req);
@@ -93,7 +92,7 @@ const logInUserRequest = (app, mongoose) => {
             // check existing data element in database
             userModel.find({userName:req.body.username})
             .then(data => {
-                if (data == null)
+                if (data.length == 0)
                 {
                     res.status(500).json("Error handling request - Username does not exist")
                 }
@@ -123,7 +122,17 @@ const logInUser = (req, res) => {
         if (result)
         {
             //TODO: Respond with token
-            res.status(200).json("User login success")
+            jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
+            .then(token => {
+                userModel.updateOne({userName: req.body.username}, {authentication:token.token, expires: token.expires})
+                .then(data => {
+                    console.log(data)
+                    res.status(200).json({authentication: token})
+                }, err => {
+                    console.log(err)
+                    res.status(500).json("Login Failed - Server error")
+                })
+            })
         }
         else 
         {
@@ -136,7 +145,7 @@ const logInUser = (req, res) => {
 };
 
 const logOutUserRequest = (app, mongoose) => {
-    app.post("/logout-user-request/", sanitizeAuthorization, (req, res, next) => {
+    app.post("/logout-user-request/", sanitizeAuthentication, (req, res, next) => {
         
         // sanitize the request
         const error = validationResult(req)
@@ -146,39 +155,65 @@ const logOutUserRequest = (app, mongoose) => {
             // check existing data element in database
             userModel.find({userName:req.body.username})
             .then(data => {
-                if (data == null) {
+                if (data.length == 0) {
                     res.status(500).json("Error handling request - Username does not exist");
                 }
                 else {
+                    req.body.hash = data[0].passwordHash
                     next()
                 }
             }, err => {
+                console.log(err)
                 res.status(500).json("Error handling request - Database error")
             })
         }
         else
         {   
-            console.log(errors);
-            res.status(500).json("Error handling request: " + result.errors[0].path + " invalid");            
+            console.log(error);
+            res.status(500).json("Error handling request: " + result.error[0].path + " invalid");            
         }
 
     }, logOutUser);
 };
 
 const logOutUser = (req, res) => {
-    // jwtHelper.jwtAuthenticateToken(req.headers.authorization)
-    // .then(authentic => {
-    //     // if token not verified return 403 error
-    //     if (!authentic)
-    //     {
-    //         res.status(403).json("Not Authentic")
-    //     }
-    //     else 
-    //     {
-        //         res.status(200).json("Authentication Success");
-    //     }
-    //     // if token is verified logOut the user 
-    // });
+    bcryptHelper.comparePassAndHash(req.body.password, req.body.hash)
+    .then(result=> {
+        if (result)
+        {
+            //TODO: Respond with token
+            jwtHelper.jwtAuthenticateToken(req.body.authentication)
+            .then(authenticity => {
+
+                if (authenticity)
+                {
+                    userModel.updateOne({ userName: req.body.username }, { authentication: "invalid", expires: "" })
+                    .then(data => {
+                        console.log(data)
+                        res.status(200).json("Logged out")
+                    }, err => {
+                        console.log(err)
+                        res.status(500).json("Login Failed - Server error")
+                    })
+                }
+                else
+                {
+                    res.status(403).json("Error handling request - invalid token");
+                }
+
+            }, err => {
+                console.log(err)
+                res.status(500).json("Error handling request - Server Error!");
+            })
+        }
+        else 
+        {
+            res.status(403).json("Login failed - Invalid password")
+        }
+    }, err => {
+        console.log(err);
+        res.status(500).json("Error handling request - Server Error!");
+    });
 };
 
 module.exports = {createUserRequest, logInUserRequest, logOutUserRequest};
