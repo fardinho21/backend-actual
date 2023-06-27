@@ -20,7 +20,9 @@ const onError = error => {
 }
 
 const onClose = () => {
+    console.log("\nServer Shutdown - SIGINT recieved")
     clearInterval(checkForValidTokensInterval);
+    process.exit()
 }
 
 app.set("port", port);
@@ -32,5 +34,5 @@ const server = http.createServer(app);
 
 server.on("listening", onListening)
 server.on("error", onError);
-server.on("close", onClose);
+process.on("SIGINT", onClose);
 server.listen(port);
