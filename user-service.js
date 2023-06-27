@@ -25,8 +25,9 @@ const sanitizeToken = check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A
 const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
 const sanitizeUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
-// API END POINTS
 
+
+// API END POINTS
 const createUserRequest = (app, mongoose) => {
     app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {
         // sanitize the request
