@@ -1,7 +1,8 @@
 const fs = require("fs");
 const http = require("http");
 // const https = require("https");
-const app = require("./app-server");
+const {app, checkForValidTokensInterval} = require("./app-server.js");
+const { clearInterval } = require("timers");
 const port = parseInt(process.env.PORT) || 8080;
 
 // const options = {
@@ -18,6 +19,10 @@ const onError = error => {
     console.log("Error: ",error)
 }
 
+const onClose = () => {
+    clearInterval(checkForValidTokensInterval);
+}
+
 app.set("port", port);
 
 
@@ -27,4 +32,5 @@ const server = http.createServer(app);
 
 server.on("listening", onListening)
 server.on("error", onError);
+server.on("close", onClose);
 server.listen(port);

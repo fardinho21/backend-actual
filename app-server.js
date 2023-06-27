@@ -31,4 +31,4 @@ logOutUserRequest(app, mongoose);
 /////////////////////// API CODE ENDS HERE ////////////////////
 
 // EXPORTS
-module.exports = app;
+module.exports = {app, checkForValidTokensInterval};
