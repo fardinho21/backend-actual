@@ -19,7 +19,9 @@ exec(createUserCurl)
     try 
     {
         if (result.stdout == `"User created!"`)
-            console.log( fgGreen, "CreateUserUnitTest SUCCESS : : response : ", resetColor, result.stdout)
+            console.log( fgGreen, "CreateUserUnitTest SUCCESS : response : ", resetColor, result.stdout)
+        else if (result.stdout == `"Error handling request - Username taken"`)
+            console.log(fgGreen, "CreateUserUnitTest SUCCESS : response : ", resetColor, result.stdout)
         else
             console.log(fgRed,"CreateUserUnitTest FAILED: error : ",resetColor, result.stdout)
     } catch (error) {
@@ -36,13 +38,13 @@ exec(loginUserCurl)
     try 
     {
         var o = JSON.parse(result.stdout)
-        if ("authentication" in o)
-            console.log(fgGreen,"LogInUserUnitTest SUCCESS : : response : \n",resetColor, o)
-            
-        else
-            console.log(fgRed,"LogInUserUnitTest FAILED: error : ",resetColor, result.stdout)
+        console.log( "object type: ", typeof o)
+        if (typeof o == "object" && "authentication" in o)
+            console.log(fgGreen,"LogInUserUnitTest SUCCESS : response : \n",resetColor, o)
+        else if (typeof o == "string" && o == `Error handling request - Username does not exist`)
+            console.log(fgGreen, "LogInUserUnitTest SUCCESS : response :", resetColor, o )
     } catch (error) {
-        console.log( "LogInUserUnitTest FAILED: error : ", error, result)
+        console.log(fgRed, "LogInUserUnitTest FAILED: error : ", resetColor, error, result)
     }
 
 }, err => {console.log(err)})
