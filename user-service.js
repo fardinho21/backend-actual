@@ -1,22 +1,13 @@
 const { check, body, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const {jwtHelper} = require("./jwt-service.js");
-
+const {dataBaseSchemas} = require("./database-schemas.js")
 const {bcryptHelper} = require("./bcrypt-service.js");
 
 
 // DATA BASE SCHEMAS AND MODELS
 mongoose.connect("mongodb://localhost:27017/local");
-
-const UserSchema = mongoose.Schema({
-    userName: String,
-    passwordHash: String,
-    authentication: String,
-    expires: String
-});
-
-const userModel = mongoose.model("users", UserSchema);
-
+const userModel = mongoose.model("users", dataBaseSchemas.UserSchema);
 
 // SANITIZERS AND VALIDATORS
 const sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(),

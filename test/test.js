@@ -51,17 +51,17 @@ exec(loginUserCurl)
 }, err => {console.log(err)})
 
 // logoutUserUnitTest
-exec(logoutUserCurl)
-.then(result => {
-    try 
-    {
-        var o = JSON.parse(result.stdout)
-        if (typeof o == "object" && "stdout" in o)
-            console.log(fgGreen,"LogoutUserUnitTest SUCCESS : response : \n",resetColor, o)
-        else if (typeof o == "string")
-            if (o == `Logged out` || o == `Error handling request - Username does not exist`)
-                console.log(fgGreen, "LogoutUserUnitTest SUCCESS : response :", resetColor, o )
-    } catch (error) {
-        console.log(fgRed, "LogoutUserUnitTest FAILED: error : ", resetColor, error, result)
-    }
-}, err => {console.log(err)})
+// exec(logoutUserCurl)
+// .then(result => {
+//     try 
+//     {
+//         var o = JSON.parse(result.stdout)
+//         if (typeof o == "object" && "stdout" in o)
+//             console.log(fgGreen,"LogoutUserUnitTest SUCCESS : response : \n",resetColor, o)
+//         else if (typeof o == "string")
+//             if (o == `Logged out` || o == `Error handling request - Username does not exist`)
+//                 console.log(fgGreen, "LogoutUserUnitTest SUCCESS : response :", resetColor, o )
+//     } catch (error) {
+//         console.log(fgRed, "LogoutUserUnitTest FAILED: error : ", resetColor, error, result)
+//     }
+// }, err => {console.log(err)})

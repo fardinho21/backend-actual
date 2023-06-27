@@ -1,6 +1,11 @@
+const mongoose = require("mongoose")
+const { dataBaseSchemas } = require("./database-schemas");
+mongoose.connect("mongodb://localhost:27017/local");
+const userModel = mongoose.model("users", dataBaseSchemas.UserSchema)
+
 const util = require("node:util");
 const exec = util.promisify(require('node:child_process').exec);
-const crypto = require("crypto")
+const crypto = require("crypto");
 
 const jwtGenerateToken = (header, payload) => {
     return exec("cat serverCert.pem | grep -vP '(-----.+-----)'")
@@ -36,8 +41,19 @@ const jwtAuthenticateToken = (token) => {
         return authToken[2]  == hashed
 
     }, err => {throw new Error("Server Error - ", err)});
-}
+};
 
-const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken}
+const jwtCheckTokenStatuses = () => {
+    userModel.find({authentication: {$ne:"invalid"}})
+    .then(data => {
+        console.log(data)
+    }, err => {console.log(err)})
+};
+
+const jwtInvalidateTokenStatuses = () => {
+
+};
+
+const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses};
 
 module.exports = {jwtHelper};
