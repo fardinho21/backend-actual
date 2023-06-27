@@ -25,8 +25,6 @@ const sanitizeToken = check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A
 const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
 const sanitizeUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
-
-
 // API END POINTS
 const createUserRequest = (app, mongoose) => {
     app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {
@@ -38,7 +36,6 @@ const createUserRequest = (app, mongoose) => {
             //Check for existing user in database
             userModel.exists({userName:req.body.username})
             .then(data => {
-                console.log(data == null)
                 if (data == null) 
                 {
                     next()
@@ -122,12 +119,10 @@ const logInUser = (req, res) => {
     .then(result=> {
         if (result)
         {
-            //TODO: Respond with token
             jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
             .then(token => {
                 userModel.updateOne({userName: req.body.username}, {authentication:token.token, expires: token.expires})
                 .then(data => {
-                    console.log(data)
                     res.status(200).json({authentication: token})
                 }, err => {
                     console.log(err)
@@ -190,7 +185,6 @@ const logOutUser = (req, res) => {
                 {
                     userModel.updateOne({ userName: req.body.username }, { authentication: "invalid", expires: "" })
                     .then(data => {
-                        console.log(data)
                         res.status(200).json("Logged out")
                     }, err => {
                         console.log(err)

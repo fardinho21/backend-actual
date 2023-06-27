@@ -12,6 +12,8 @@ var createUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"hea
 
 var loginUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"}, "username":"genericUser0", "password":"password1234!"}' http://localhost:8080/login-user-request`
 
+var logoutUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"username":"genericUser0", "password":"password1234!", "authentication":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0.6Br15KPCCGuSZB5eY4LveJAwsi2EtaysyO51OhInxxY"}' http://localhost:8080/logout-user-request`
+
 // createUser Unit test
 exec(createUserCurl)
 .then(result => {
@@ -38,7 +40,6 @@ exec(loginUserCurl)
     try 
     {
         var o = JSON.parse(result.stdout)
-        console.log( "object type: ", typeof o)
         if (typeof o == "object" && "authentication" in o)
             console.log(fgGreen,"LogInUserUnitTest SUCCESS : response : \n",resetColor, o)
         else if (typeof o == "string" && o == `Error handling request - Username does not exist`)
@@ -49,4 +50,18 @@ exec(loginUserCurl)
 
 }, err => {console.log(err)})
 
-//TODO logout user tests
+// logoutUserUnitTest
+exec(logoutUserCurl)
+.then(result => {
+    try 
+    {
+        var o = JSON.parse(result.stdout)
+        if (typeof o == "object" && "stdout" in o)
+            console.log(fgGreen,"LogoutUserUnitTest SUCCESS : response : \n",resetColor, o)
+        else if (typeof o == "string")
+            if (o == `Logged out` || o == `Error handling request - Username does not exist`)
+                console.log(fgGreen, "LogoutUserUnitTest SUCCESS : response :", resetColor, o )
+    } catch (error) {
+        console.log(fgRed, "LogoutUserUnitTest FAILED: error : ", resetColor, error, result)
+    }
+}, err => {console.log(err)})
