@@ -8,11 +8,15 @@ const fgRed = "\x1b[31m"
 const fgGreen = "\x1b[32m"
 
 const urlBase = "http://localhost:8080/"
-var createUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"},"username":"genericUser0","password": "password1234!"}' http://localhost:8080/create-user-request`
 
-var loginUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"}, "username":"genericUser0", "password":"password1234!"}' http://localhost:8080/login-user-request`
+var username=`"genericUser2"`
+var password=`"password1234!"`
 
-var logoutUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"username":"genericUser0", "password":"password1234!", "authentication":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0.6Br15KPCCGuSZB5eY4LveJAwsi2EtaysyO51OhInxxY"}' http://localhost:8080/logout-user-request`
+var createUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a"},"username":${username},"password": ${password}}' http://localhost:8080/create-user-request`
+
+var loginUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a","username":${username},"password":${password}}}' http://localhost:8080/login-user-request`
+
+var logoutUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"username":${username}, "password":${password}, "authentication":""}' http://localhost:8080/logout-user-request`
 
 // createUser Unit test
 exec(createUserCurl)

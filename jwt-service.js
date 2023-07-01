@@ -20,7 +20,7 @@ const jwtGenerateToken = (header, payload) => {
         const hashed = hashedTemp.digest('base64url');
         var d = new Date();
         d.setMinutes(90);
-        return {token:hashThis+"."+hashed, expires: d.toTimeString() }
+        return {token:hashThis+"."+hashed, expires: d }
     }, err => {throw new Error("Server Error - ", err)})
 };
 
@@ -43,17 +43,15 @@ const jwtAuthenticateToken = (token) => {
     }, err => {throw new Error("Server Error - ", err)});
 };
 
+// WIP
 const jwtCheckTokenStatuses = () => {
-    userModel.find({authentication: {$ne:"invalid"}})
-    .then(data => {
-        console.log(data)
-    }, err => {console.log(err)})
+    return userModel.find({expires: {$lt: new Date()}});
 };
 
-const jwtInvalidateTokenStatuses = () => {
-
+const jwtInvalidateExpiredTokens  = () => {
+    return userModel.updateMany({expires: {$lt: new Date()}}, {authentication:"invalid", expires: null})
 };
 
-const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses};
+const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses, jwtInvalidateExpiredTokens};
 
 module.exports = {jwtHelper};

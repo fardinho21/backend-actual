@@ -4,7 +4,7 @@ const UserSchema = mongoose.Schema({
     userName: String,
     passwordHash: String,
     authentication: String,
-    expires: String
+    expires: Date
 });
 
 const dataBaseSchemas = {UserSchema}

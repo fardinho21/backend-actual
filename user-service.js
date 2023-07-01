@@ -56,7 +56,7 @@ const createUser = (req, res) => {
     .then(hash =>{
         tempPayload.passwordHash = hash;
 
-        userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:""})
+        userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:null})
         .then(data => {
             res.status(200).json("User created!");
         }, err => {
@@ -79,7 +79,7 @@ const logInUserRequest = (app, mongoose) => {
         if (result.isEmpty())
         {
             // check existing data element in database
-            userModel.find({userName:req.body.username})
+            userModel.find({userName:req.body.payload.username})
             .then(data => {
                 if (data.length == 0)
                 {
@@ -106,13 +106,13 @@ const logInUserRequest = (app, mongoose) => {
 };
 
 const logInUser = (req, res) => {
-    bcryptHelper.comparePassAndHash(req.body.password, req.body.hash)
+    bcryptHelper.comparePassAndHash(req.body.payload.password, req.body.hash)
     .then(result=> {
         if (result)
         {
             jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
             .then(token => {
-                userModel.updateOne({userName: req.body.username}, {authentication:token.token, expires: token.expires})
+                userModel.updateOne({userName: req.body.payload.username}, {authentication:token.token, expires: token.expires})
                 .then(data => {
                     res.status(200).json({authentication: token})
                 }, err => {
@@ -174,7 +174,7 @@ const logOutUser = (req, res) => {
 
                 if (authenticity)
                 {
-                    userModel.updateOne({ userName: req.body.username }, { authentication: "invalid", expires: "" })
+                    userModel.updateOne({ userName: req.body.username }, { authentication: "invalid", expires: null })
                     .then(data => {
                         res.status(200).json("Logged out")
                     }, err => {

@@ -18,7 +18,17 @@ app.use((req, res, next) => {
 app.disable("x-powered-by")
 
 //TODO: set up periodic event to clear out tokens that are expired.
-const checkForValidTokensInterval = setInterval(jwtHelper.jwtCheckTokenStatuses, 1000)
+const checkForValidTokensInterval = setInterval(() => {
+    jwtHelper.jwtCheckTokenStatuses()
+    .then(data => {
+        console.log("data: ", data)
+        jwtHelper.jwtInvalidateExpiredTokens()
+        .then(result => {
+            console.log("result: ",result)
+        }, err => {console.log(err)})
+    }, err => {console.log(err)})
+
+}, 1000)
 /////////////////////////////////// APPLICATION BOILERPLATE END /////////////////////////////////////////////////// 
 /////////////////////// API CODE STARTS HERE ////////////////////
 
