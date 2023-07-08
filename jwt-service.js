@@ -1,4 +1,5 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const { clearInterval } = require("timers");
 const { dataBaseSchemas } = require("./database-schemas");
 mongoose.connect("mongodb://localhost:27017/local");
 const userModel = mongoose.model("users", dataBaseSchemas.UserSchema)
@@ -52,6 +53,14 @@ const jwtInvalidateExpiredTokens  = () => {
     return userModel.updateMany({expires: {$lt: new Date()}}, {$set: { authentication: "invalid", expires: null }})
 };
 
-const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses, jwtInvalidateExpiredTokens};
+const jwtClearCheckForValidTokensInterval = () => {
+    clearInterval(checkForValidTokensInterval);
+}
+
+const checkForValidTokensInterval = setInterval(() => {
+    console.log("Check for token statuses");
+}, 1000);
+
+const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses, jwtInvalidateExpiredTokens, jwtClearCheckForValidTokensInterval, checkForValidTokensInterval};
 
 module.exports = {jwtHelper};

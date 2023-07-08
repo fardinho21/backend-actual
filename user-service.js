@@ -10,10 +10,8 @@ mongoose.connect("mongodb://localhost:27017/local");
 const userModel = mongoose.model("users", dataBaseSchemas.UserSchema);
 
 // SANITIZERS AND VALIDATORS
-const sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(),
-                      check('payload', "Payload must be an object.").isObject()];
-const sanitizeToken = check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
-const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
+const sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(), check('payload', "Payload must be an object.").isObject()];
+const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)]
 
 const sanitizeUserRequest = [body('payload.username').isLength({max:25,min:6}), body('payload.password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
 // API END POINTS
@@ -72,17 +70,14 @@ const createUser = (req, res) => {
 
 const logInUserRequest = (app, mongoose) => {
     app.post("/login-user-request/", sanitizeUserRequest, (req, res, next) => {
-        console.log("HELLO WORLD")
         // sanitize the request
         const result = validationResult(req);
         
         if (result.isEmpty())
         {
-            console.log(req.body.payload)
             // check existing data element in database
             userModel.find({userName:req.body.payload.username})
             .then(data => {
-                console.log(data)
                 if (data.length == 0)
                 {
                     res.status(500).json("Error handling request - Username does not exist")
@@ -149,8 +144,16 @@ const logOutUserRequest = (app, mongoose) => {
                     res.status(500).json("Error handling request - Username does not exist");
                 }
                 else {
-                    req.body.hash = data[0].passwordHash
-                    next()
+                    console.log(data[0]);
+                    if (data[0].authentication == req.body.authentication) 
+                    {
+                        req.body.hash = data[0].passwordHash
+                        next()
+                    }
+                    else
+                    {
+                        res.status(500).json("Error handling request - Token invalid.")
+                    }
                 }
             }, err => {
                 console.log(err)
@@ -171,7 +174,6 @@ const logOutUser = (req, res) => {
     .then(result=> {
         if (result)
         {
-            //TODO: Respond with token
             jwtHelper.jwtAuthenticateToken(req.body.authentication)
             .then(authenticity => {
 
@@ -197,7 +199,7 @@ const logOutUser = (req, res) => {
         }
         else 
         {
-            res.status(403).json("Login failed - Invalid password")
+            res.status(403).json("Logout failed - Invalid password")
         }
     }, err => {
         console.log(err);

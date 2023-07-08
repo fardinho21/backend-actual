@@ -1,5 +1,4 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
-const { jwtHelper } = require("./jwt-service.js")
 const { createUserRequest, logInUserRequest, logOutUserRequest } = require("./user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
@@ -17,11 +16,6 @@ app.use((req, res, next) => {
 });
 app.disable("x-powered-by")
 
-//TODO: set up periodic event to clear out tokens that are expired.
-//NOT WORKING
-const checkForValidTokensInterval = setInterval(() => {
-    console.log("Check token statuses")
-}, 1000)
 /////////////////////////////////// APPLICATION BOILERPLATE END /////////////////////////////////////////////////// 
 /////////////////////// API CODE STARTS HERE ////////////////////
 
@@ -34,4 +28,4 @@ logOutUserRequest(app, mongoose);
 /////////////////////// API CODE ENDS HERE ////////////////////
 
 // EXPORTS
-module.exports = {app, checkForValidTokensInterval};
+module.exports = {app};

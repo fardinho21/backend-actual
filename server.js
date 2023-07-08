@@ -1,10 +1,11 @@
 const fs = require("fs");
 const http = require("http");
 // const https = require("https");
-const {app, checkForValidTokensInterval} = require("./app-server.js");
-const { clearInterval } = require("timers");
+const {app} = require("./app-server.js");
+const { jwtHelper } = require("./jwt-service.js")
 const port = parseInt(process.env.PORT) || 8080;
 
+// DO NOT DELETE
 // const options = {
 //     key: fs.readFileSync('./no-pass-key.pem'),
 //     cert: fs.readFileSync('./test-cert.pem')
@@ -20,8 +21,8 @@ const onError = error => {
 }
 
 const onClose = () => {
-    console.log("\nServer Shutdown - SIGINT recieved")
-    clearInterval(checkForValidTokensInterval);
+    console.log("\nServer Shutdown - SIGINT recieved\nClearing Intervals...")
+    jwtHelper.jwtClearCheckForValidTokensInterval();
     process.exit()
 }
 
@@ -30,6 +31,7 @@ app.set("port", port);
 
 const server = http.createServer(app);
 
+// DO NOT DELETE
 // const server = https.createServer(options, app)
 
 server.on("listening", onListening)
