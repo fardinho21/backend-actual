@@ -15,7 +15,7 @@ const sanitizeHeaderPayload = [check('header', "Header must be an object.").isOb
 const sanitizeToken = check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
 const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), sanitizeToken]
 
-const sanitizeUserRequest = [check('username').isLength({max:25,min:6}), check('password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
+const sanitizeUserRequest = [body('payload.username').isLength({max:25,min:6}), body('payload.password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
 // API END POINTS
 const createUserRequest = (app, mongoose) => {
     app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {
@@ -25,7 +25,7 @@ const createUserRequest = (app, mongoose) => {
         if (result.isEmpty())
         {
             //Check for existing user in database
-            userModel.exists({userName:req.body.username})
+            userModel.exists({userName:req.body.payload.username})
             .then(data => {
                 if (data == null) 
                 {
@@ -51,8 +51,8 @@ const createUserRequest = (app, mongoose) => {
 
 const createUser = (req, res) => {
     var tempPayload = req.body.payload;
-    tempPayload.userName = req.body.username;
-    bcryptHelper.generatePassHash(req.body.password)
+    tempPayload.userName = req.body.payload.username;
+    bcryptHelper.generatePassHash(req.body.payload.password)
     .then(hash =>{
         tempPayload.passwordHash = hash;
 
@@ -72,20 +72,22 @@ const createUser = (req, res) => {
 
 const logInUserRequest = (app, mongoose) => {
     app.post("/login-user-request/", sanitizeUserRequest, (req, res, next) => {
-        
+        console.log("HELLO WORLD")
         // sanitize the request
         const result = validationResult(req);
         
         if (result.isEmpty())
         {
+            console.log(req.body.payload)
             // check existing data element in database
             userModel.find({userName:req.body.payload.username})
             .then(data => {
+                console.log(data)
                 if (data.length == 0)
                 {
                     res.status(500).json("Error handling request - Username does not exist")
                 }
-                else
+                else // next()
                 {
                     req.body.hash = data[0].passwordHash
                     next();
@@ -102,7 +104,7 @@ const logInUserRequest = (app, mongoose) => {
             res.status(500).json("Error handling request: " + result.errors[0].path + " invalid");
         }
 
-    }, logInUser);
+    }, logInUser );
 };
 
 const logInUser = (req, res) => {
@@ -112,6 +114,7 @@ const logInUser = (req, res) => {
         {
             jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
             .then(token => {
+                console.log(token)
                 userModel.updateOne({userName: req.body.payload.username}, {authentication:token.token, expires: token.expires})
                 .then(data => {
                     res.status(200).json({authentication: token})

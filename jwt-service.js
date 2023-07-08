@@ -49,7 +49,7 @@ const jwtCheckTokenStatuses = () => {
 };
 
 const jwtInvalidateExpiredTokens  = () => {
-    return userModel.updateMany({expires: {$lt: new Date()}}, {authentication:"invalid", expires: null})
+    return userModel.updateMany({expires: {$lt: new Date()}}, {$set: { authentication: "invalid", expires: null }})
 };
 
 const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses, jwtInvalidateExpiredTokens};
