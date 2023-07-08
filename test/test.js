@@ -38,9 +38,9 @@ var authentication3=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRyb2lkI
 ////// CURL COMMANDS
 //////////////////////////////////////////////////////
 var curlBasePost='curl -X POST -H "Content-Type: application/json" -d'
-var createUserCurl = `${curlBasePost} '{"header":${header1},"payload":${payload1}}' ${urlBase}/create-user-request`
+var createUserCurl = `${curlBasePost} '{"header":${header3},"payload":${payload3}}' ${urlBase}/create-user-request`
 var loginUserCurl = `${curlBasePost} '{"header":${header1},"payload":${payload1}}' ${urlBase}/login-user-request`
-var logoutUserCurl = `${curlBasePost} '{"username":${username1}, "password":${password1}, "authentication":${authentication1}}' ${urlBase}/logout-user-request`
+var logoutUserCurl = `${curlBasePost} '{"username":${username3}, "password":${password3}, "authentication":${authentication3}}' ${urlBase}/logout-user-request`
 
 
 //////////////////////////////////////////////////////
@@ -68,20 +68,20 @@ var logoutUserCurl = `${curlBasePost} '{"username":${username1}, "password":${pa
 
 
 // loginUserUnitTest
-// exec(loginUserCurl)
-// .then(result => {
-//     try 
-//     {
-//         var o = JSON.parse(result.stdout)
-//         if (typeof o == "object" && "authentication" in o)
-//             console.log(fgGreen,"LogInUserUnitTest SUCCESS : response : \n",resetColor, o)
-//         else if (typeof o == "string" && o == `Error handling request - Username does not exist`)
-//             console.log(fgGreen, "LogInUserUnitTest SUCCESS : response :", resetColor, o )
-//     } catch (error) {
-//         console.log(fgRed, "LogInUserUnitTest FAILED: error : ", resetColor, error, result)
-//     }
+exec(loginUserCurl)
+.then(result => {
+    try 
+    {
+        var o = JSON.parse(result.stdout)
+        if (typeof o == "object" && "authentication" in o)
+            console.log(fgGreen,"LogInUserUnitTest SUCCESS : response : \n",resetColor, o)
+        else if (typeof o == "string" && o == `Error handling request - Username does not exist`)
+            console.log(fgGreen, "LogInUserUnitTest SUCCESS : response :", resetColor, o )
+    } catch (error) {
+        console.log(fgRed, "LogInUserUnitTest FAILED: error : ", resetColor, error, result)
+    }
 
-// }, err => {console.log(err)})
+}, err => {console.log(err)})
 
 // logoutUserUnitTest
 // exec(logoutUserCurl)

@@ -20,7 +20,7 @@ const jwtGenerateToken = (header, payload) => {
         let hashedTemp = hmac.update(hashThis);
         const hashed = hashedTemp.digest('base64url');
         var d = new Date();
-        d.setMinutes(90);
+        d.setMinutes(10);
         return {token:hashThis+"."+hashed, expires: d }
     }, err => {throw new Error("Server Error - ", err)})
 };
@@ -46,7 +46,7 @@ const jwtAuthenticateToken = (token) => {
 
 // WIP
 const jwtCheckTokenStatuses = () => {
-    return userModel.find({expires: {$lt: new Date()}});
+    return userModel.find({expires: {$lt: new Date()}})
 };
 
 const jwtInvalidateExpiredTokens  = () => {
@@ -59,7 +59,9 @@ const jwtClearCheckForValidTokensInterval = () => {
 
 const checkForValidTokensInterval = setInterval(() => {
     console.log("Check for token statuses");
-}, 1000);
+    jwtCheckTokenStatuses()
+    .then(data => jwtInvalidateExpiredTokens());
+}, 5000);
 
 const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses, jwtInvalidateExpiredTokens, jwtClearCheckForValidTokensInterval, checkForValidTokensInterval};
 

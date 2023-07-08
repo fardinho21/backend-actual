@@ -109,7 +109,7 @@ const logInUser = (req, res) => {
         {
             jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
             .then(token => {
-                console.log(token)
+                console.log(token.expires.toTimeString())
                 userModel.updateOne({userName: req.body.payload.username}, {authentication:token.token, expires: token.expires})
                 .then(data => {
                     res.status(200).json({authentication: token})
