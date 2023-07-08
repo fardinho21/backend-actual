@@ -1,23 +1,52 @@
+
 const util = require("util");
 const exec = util.promisify(require('child_process').exec);
 
-// COLORS
+////////////////////////////////////////////////
+////// SETTING UP VARIABLES
+////////////////////////////////////////////////
+
+const urlBase = "http://localhost:8080"
+
+////// COLORS
 const resetColor = "\x1b[0m"
 const brightColor = "\x1b[1m"
 const fgRed = "\x1b[31m"
 const fgGreen = "\x1b[32m"
 
-const urlBase = "http://localhost:8080/"
+////// TEST USERS
+var username1='"genericUser1"'
+var password1='"password1234!"'
+var header1='{"alg":"HS256","typ":"JWT"}'
+var payload1=`{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a", "username":${username1},"password": ${password1}}`
+var authentication1=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIiwidXNlcm5hbWUiOiJnZW5lcmljVXNlcjIiLCJwYXNzd29yZCI6InBhc3N3b3JkMTIzNCEifQ.La7k82lchoMjGxuDgVvw2CLcxDs8nEKyVUVAO_L43ds"`
 
-var username=`"genericUser2"`
-var password=`"password1234!"`
-var authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIiwidXNlcm5hbWUiOiJnZW5lcmljVXNlcjIiLCJwYXNzd29yZCI6InBhc3N3b3JkMTIzNCEifQ.La7k82lchoMjGxuDgVvw2CLcxDs8nEKyVUVAO_L43ds"`
+var username2='"genericUser2"'
+var password2='"password4321!"'
+var header2=header1
+var payload2=`{"dev":"Android","osv":"Tiramisu","appv":"1.0.0a", "username":${username2},"password":${password2}}`
+var authentication2=`""`
 
-var createUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a", "username":${username},"password": ${password}}}' http://localhost:8080/create-user-request`
+var username3='"genericUser3"'
+var password3='"password1423"'
+var header3=header1
+var payload3=`{"dev":"Android","osv":"Tiramisu","appv":"1.0.0a", "username":${username3},"password":${password3}}`
+var authentication3=`""`
 
-var loginUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","typ":"JWT"},"payload":{"dev":"IPhone","osv":"iOS-17","appv":"1.0.0a", "username":${username},"password":${password}}}' http://localhost:8080/login-user-request`
 
-var logoutUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"username":${username}, "password":${password}, "authentication":${authentication}}' http://localhost:8080/logout-user-request`
+//////////////////////////////////////////////////////
+////// CURL COMMANDS
+//////////////////////////////////////////////////////
+var curlBasePost='curl -X POST -H "Content-Type: application/json" -d'
+var createUserCurl = `${curlBasePost} '{"header":${header1},"payload":${payload1}}' ${urlBase}/create-user-request`
+var loginUserCurl = `${curlBasePost} '{"header":${header1},"payload":${payload1}}' ${urlBase}/login-user-request`
+var logoutUserCurl = `${curlBasePost} '{"username":${username1}, "password":${password1}, "authentication":${authentication3}}' ${urlBase}/logout-user-request`
+
+
+//////////////////////////////////////////////////////
+////// UNIT TESTS STARTT HERE
+//////////////////////////////////////////////////////
+
 
 // createUser Unit test
 // exec(createUserCurl)
@@ -39,33 +68,33 @@ var logoutUserCurl = `curl -X POST -H "Content-Type: application/json" -d '{"use
 
 
 // loginUserUnitTest
-// exec(loginUserCurl)
-// .then(result => {
-//     try 
-//     {
-//         var o = JSON.parse(result.stdout)
-//         if (typeof o == "object" && "authentication" in o)
-//             console.log(fgGreen,"LogInUserUnitTest SUCCESS : response : \n",resetColor, o)
-//         else if (typeof o == "string" && o == `Error handling request - Username does not exist`)
-//             console.log(fgGreen, "LogInUserUnitTest SUCCESS : response :", resetColor, o )
-//     } catch (error) {
-//         console.log(fgRed, "LogInUserUnitTest FAILED: error : ", resetColor, error, result)
-//     }
-
-// }, err => {console.log(err)})
-
-// logoutUserUnitTest
-exec(logoutUserCurl)
+exec(loginUserCurl)
 .then(result => {
     try 
     {
         var o = JSON.parse(result.stdout)
-        if (typeof o == "object" && "stdout" in o)
-            console.log(fgGreen,"LogoutUserUnitTest SUCCESS : response : \n",resetColor, o)
-        else if (typeof o == "string")
-            if (o == `Logged out` || o == `Error handling request - Username does not exist`)
-                console.log(fgGreen, "LogoutUserUnitTest SUCCESS : response :", resetColor, o )
+        if (typeof o == "object" && "authentication" in o)
+            console.log(fgGreen,"LogInUserUnitTest SUCCESS : response : \n",resetColor, o)
+        else if (typeof o == "string" && o == `Error handling request - Username does not exist`)
+            console.log(fgGreen, "LogInUserUnitTest SUCCESS : response :", resetColor, o )
     } catch (error) {
-        console.log(fgRed, "LogoutUserUnitTest FAILED: error : ", resetColor, error, result)
+        console.log(fgRed, "LogInUserUnitTest FAILED: error : ", resetColor, error, result)
     }
+
 }, err => {console.log(err)})
+
+// logoutUserUnitTest
+// exec(logoutUserCurl)
+// .then(result => {
+//     try 
+//     {
+//         var o = JSON.parse(result.stdout)
+//         if (typeof o == "object" && "stdout" in o)
+//             console.log(fgGreen,"LogoutUserUnitTest SUCCESS : response : \n",resetColor, o)
+//         else if (typeof o == "string")
+//             if (o == `Logged out` || o == `Error handling request - Username does not exist`)
+//                 console.log(fgGreen, "LogoutUserUnitTest SUCCESS : response :", resetColor, o )
+//     } catch (error) {
+//         console.log(fgRed, "LogoutUserUnitTest FAILED: error : ", resetColor, error, result)
+//     }
+// }, err => {console.log(err)})
