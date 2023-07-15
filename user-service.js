@@ -10,10 +10,19 @@ mongoose.connect("mongodb://localhost:27017/local");
 const userModel = mongoose.model("users", dataBaseSchemas.UserSchema);
 
 // SANITIZERS AND VALIDATORS
-const sanitizeHeaderPayload = [check('header', "Header must be an object.").isObject(), check('payload', "Payload must be an object.").isObject()];
-const sanitizeAuthentication = [check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)]
-
-const sanitizeUserRequest = [body('payload.username').isLength({max:25,min:6}), body('payload.password').isLength({max:15,min:6}), ...sanitizeHeaderPayload]
+const sanitizeHeaderPayload = [
+    check('header', "Header must be an object.").isObject(), 
+    check('payload', "Payload must be an object.").isObject()
+];
+const sanitizeAuthentication = [
+    check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), 
+    check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
+];
+const sanitizeUserRequest = [
+    body('payload.username').isLength({max:25,min:6}), 
+    body('payload.password').isLength({max:15,min:6}), 
+    ...sanitizeHeaderPayload
+];
 // API END POINTS
 const createUserRequest = (app, mongoose) => {
     app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {
@@ -109,7 +118,7 @@ const logInUser = (req, res) => {
         {
             jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
             .then(token => {
-                console.log(token.expires.toTimeString())
+                console.log(token.expires)
                 userModel.updateOne({userName: req.body.payload.username}, {authentication:token.token, expires: token.expires})
                 .then(data => {
                     res.status(200).json({authentication: token})
