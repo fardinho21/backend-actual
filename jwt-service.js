@@ -20,7 +20,7 @@ const jwtGenerateToken = (header, payload) => {
         let hashedTemp = hmac.update(hashThis);
         const hashed = hashedTemp.digest('base64url');
         var d = new Date();
-        d.setMinutes(d.getMinutes() + 10);
+        d.setMinutes(d.getMinutes() + 3);
         return {token:hashThis+"."+hashed, expires: d }
     }, err => {throw new Error("Server Error - ", err)})
 };
@@ -44,7 +44,7 @@ const jwtAuthenticateToken = (token) => {
     }, err => {throw new Error("Server Error - ", err)});
 };
 
-// WIP
+
 const jwtCheckTokenStatuses = () => {
     return userModel.find({expires: {$lt: new Date()}})
 };
