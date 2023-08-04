@@ -18,6 +18,6 @@ const MTGSetSchema = mongoose.Schema({
     setCode: String,
 })
 
-const dataBaseSchemas = {UserSchema}
+const dataBaseSchemas = {UserSchema, MTGSetSchema, MTGCardSchema}
 
 module.exports = {dataBaseSchemas}
