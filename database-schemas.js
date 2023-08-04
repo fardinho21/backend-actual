@@ -7,6 +7,17 @@ const UserSchema = mongoose.Schema({
     expires: Date
 });
 
+const MTGCardSchema = mongoose.Schema({
+    cardName: String,
+    setCode: String,
+    imageUrl: String
+})
+
+const MTGSetSchema = mongoose.Schema({
+    setName: String,
+    setCode: String,
+})
+
 const dataBaseSchemas = {UserSchema}
 
 module.exports = {dataBaseSchemas}
