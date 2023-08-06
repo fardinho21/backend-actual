@@ -11,15 +11,11 @@ const mtgSetWithCardsModel = mongoose.model('mtgSetWithCards', dataBaseSchemas.M
 const re = /\([A-Z]{3,4}\)/g //match four letter code
 const re1 = /\([A-Z|0-9]{3,5}\)/
 
-const loadMTGSetData = async () =>
+const loadMTGSetData = () =>
 {
     const fileStream = fs.createReadStream("./temp/set-titles");
     const rl = readline.createInterface({input:fileStream, crlfDelay: 10});
-    rl.on('line', data => {
-        addMTGSetToDB(data)
-    })
-    
- 
+    rl.on('line', addMTGSetToDB)
 }
 
 const addMTGSetToDB = mtgSetCode =>
@@ -39,11 +35,30 @@ const addMTGSetToDB = mtgSetCode =>
     }
 }
 
+const loadMTGSetImages = () =>
+{
+    fs.readdirSync("./temp/images/").forEach(file =>{
+        let cardList = [];
+        let documentName = file.split("-")[2].toUpperCase();
+        //1. read the file get the set code
+        //2. add the <img\> tag from each line in the file to the card list
+        //3. put in collection as document with setCode and cardList full.
+        let fileStream = fs.createReadStream(`./temp/images/${file}`);
+        let rl = readline.createInterface({input: fileStream, crlfDelay: 10});
+        rl.on("line", data => {cardList.push(data)});
+        rl.on("close", () => {
+            addMTGSetWithCardsToDB({setCode: documentName, cardList: cardList});
+        });
+    });
+
+}
+
 const addMTGSetWithCardsToDB = mtgData =>
 {
     try
     {
-
+        mtgSetWithCardsModel.insertMany(mtgData)
+        .then(result => {console.log(result)});
     }
     catch (error)
     {
@@ -51,6 +66,6 @@ const addMTGSetWithCardsToDB = mtgData =>
     }
 }
 
-const mtgDBScript = {loadMTGSetData};
+const mtgDBScript = {loadMTGSetData, loadMTGSetImages};
 
 module.exports = {mtgDBScript};
