@@ -1,11 +1,11 @@
 const { check, body, validationResult } = require("express-validator");
-const mongoose = require("mongoose");
 const {jwtHelper} = require("./jwt-service.js");
-const {dataBaseSchemas} = require("./database-schemas.js")
 const {bcryptHelper} = require("./bcrypt-service.js");
 
 
 // DATA BASE SCHEMAS AND MODELS
+const mongoose = require("mongoose");
+const {dataBaseSchemas} = require("./database-schemas.js")
 mongoose.connect("mongodb://localhost:27017/local");
 const userModel = mongoose.model("users", dataBaseSchemas.UserSchema);
 
