@@ -27,6 +27,7 @@ logInUserRequest(app, mongoose);
 logOutUserRequest(app, mongoose);
 mtgFeatureService.searchCardByName(app);
 mtgFeatureService.searchSetByName(app)
+mtgFeatureService.searchSetByCode(app)
 /////////////////// USER SERVICES ENDPOINTS END
 /////////////////////// API CODE ENDS HERE ////////////////////
 
