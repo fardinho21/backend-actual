@@ -10,8 +10,12 @@ const searchCardByName = (app) =>
 {
     app.post("/search-card-by-name/", (req, res) =>
     {
-        console.log(req.body.data)
-        res.status(200).json("SUCCESS")
+        console.log(req.body.cardName)
+        mtgCardModel.find({ cardName: req.body.cardName }, "cardName")
+            .then(data => {
+                console.log(data)
+                res.status(200).json("GOOD")
+            })
     })
 }
 
@@ -19,8 +23,12 @@ const searchSetByName = (app) =>
 {
     app.post("/search-set-by-name/", (req, res) => 
     {
-        console.log(req.body.data)
-        res.status(200).json("SUCCESS")
+        console.log(req.body.setName)
+        mtgSetModel.find({ setName: req.body.setName }, "setName")
+            .then(data => {
+                console.log(data)
+                res.status(200).json("GOOD")
+            })
     })
 }
 
