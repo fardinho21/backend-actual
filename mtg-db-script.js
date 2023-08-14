@@ -11,7 +11,7 @@ const mtgCardsModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchem
 
 const re = /\([A-Z]{3,4}\)/g //match four letter code
 const re1 = /\([A-Z|0-9]{3,5}\)/
-const title_re = /title\=\".+\"/g
+const title_re = /title\=\".+\)\"/g
 const src_re = /src\=\".+\"/g
 
 const loadMTGSetData = () =>
@@ -76,12 +76,22 @@ const loadMTGCardData = () =>
 const addMTGCardDataToDB = (mtgCardData) =>
 {
     // TODO find out how to match the code
-    const matches_title= mtgCardData.match(title_re)
-    const matches_src= mtgCardData.match(src_re)
+    const matches_title= mtgCardData.match(title_re);
+    const matches_src= mtgCardData.match(src_re);
+    const vals= matches_title[0].split("(");
+    var cardName= vals[0].split("=")[1].trim();
+    var setCode="("+vals.slice(-1);
+    var imageUrl=matches_src[0].split("=")[1];
+    cardName=cardName.replace('"','')
+    setCode=setCode.replace('"','')
+    imageUrl=imageUrl.replace('"','').replace('"','')
+    const objectToDB= {cardName: cardName, setCode: setCode, imageUrl: imageUrl};
+
+    // console.log(objectToDB);
     
-    console.log(matches_title, matches_src)
+    mtgCardsModel.insertMany(objectToDB)
+    .then(result => {console.log(result)});
     
-    // mtgCardsModel.insertMany()
 }
 
 const mtgDBScript = {loadMTGSetData, loadMTGSetImages, loadMTGCardData};
