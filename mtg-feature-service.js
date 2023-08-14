@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const {dataBaseSchemas} = require("./database-schemas.js");
 mongoose.connect("mongodb://localhost:27017/local");
 const mtgSetModel = mongoose.model("mtgSetTitles", dataBaseSchemas.MTGSetSchema);
-const mtgCardModel = mongoose.model("mtgSetWithCards", dataBaseSchemas.MTGCardSchema)
+const mtgSetCodeModel = mongoose.model("mtgSetWithCards", dataBaseSchemas.MTGCardSchema)
 const mtgSetCodesWithCardsModel = mongoose.model("mtgSetCodesWithCards", dataBaseSchemas.MTGSetCodeWithCardsSchema);
 
 const searchCardByName = (app) => 
@@ -12,10 +12,10 @@ const searchCardByName = (app) =>
     app.post("/search-card-by-name/", (req, res) =>
     {
         console.log(req.body.cardName)
-        mtgCardModel.find({ cardName: { $regex :req.body.cardName } })
+        mtgAllCardsModel.find({ cardName: { $regex :req.body.cardName } })
             .then(data => {
-                console.log(data)
-                res.status(200).json("GOOD")
+                // console.log(data)
+                res.status(200).json(data)
             })
     })
 }
@@ -37,8 +37,8 @@ const searchSetByCode = (app) =>
 {
     app.post("/search-set-by-code/", (req, res) => 
     {
-        console.log(req.body.setCode); //TODO : database collection needs to be populated
-        mtgSetModel.find({ setCode: { $regex: req.body.setCode } })
+        console.log(req.body.setCode)
+        mtgSetCodeModel.find({ setCode: { $regex: req.body.setCode } })
             .then(data => {
                 // console.log(data)
                 res.status(200).json(data)
@@ -47,4 +47,4 @@ const searchSetByCode = (app) =>
 }
 
 const mtgFeatureService = {searchCardByName, searchSetByName, searchSetByCode};
-module.exports = {mtgFeatureService}
+module.exports = {mtgFeatureService};

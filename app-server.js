@@ -1,5 +1,6 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
 const { mtgFeatureService } = require("./mtg-feature-service.js");
+const { stripeFeatureService } = require("./stripe-feature-service.js")
 const { createUserRequest, logInUserRequest, logOutUserRequest } = require("./user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
@@ -28,6 +29,8 @@ logOutUserRequest(app, mongoose);
 mtgFeatureService.searchCardByName(app);
 mtgFeatureService.searchSetByName(app)
 mtgFeatureService.searchSetByCode(app)
+stripeFeatureService.checkoutSession(app);
+stripeFeatureService.createProduct(app);
 /////////////////// USER SERVICES ENDPOINTS END
 /////////////////////// API CODE ENDS HERE ////////////////////
 

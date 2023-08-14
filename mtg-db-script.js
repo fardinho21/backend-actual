@@ -6,10 +6,13 @@ const {dataBaseSchemas} = require("./database-schemas.js");
 // DATA BASE SCHEMAS AND MODELS
 mongoose.connect("mongodb://localhost:27017/local")
 const mtgSetModel = mongoose.model("mtgSetTitles", dataBaseSchemas.MTGSetSchema);
-const mtgSetWithCardsModel = mongoose.model('mtgSetWithCards', dataBaseSchemas.MTGSetWithCardsSchema);
+const mtgSetCodeWithCardsModel = mongoose.model('mtgSetWithCards', dataBaseSchemas.MTGSetCodeWithCardsSchema);
+const mtgCardsModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchema);
 
 const re = /\([A-Z]{3,4}\)/g //match four letter code
 const re1 = /\([A-Z|0-9]{3,5}\)/
+const title_re = /title\=\".+\"/g
+const src_re = /src\=\".+\"/g
 
 const loadMTGSetData = () =>
 {
@@ -18,7 +21,7 @@ const loadMTGSetData = () =>
     rl.on('line', addMTGSetToDB)
 }
 
-const addMTGSetToDB = mtgSetCode =>
+const addMTGSetToDB = (mtgSetCode) =>
 {   
     const matches = mtgSetCode.match(re1)
     try 
@@ -40,9 +43,6 @@ const loadMTGSetImages = () =>
     fs.readdirSync("./temp/images/").forEach(file =>{
         let cardList = [];
         let documentName = file.split("-")[2].toUpperCase();
-        //1. read the file get the set code
-        //2. add the <img\> tag from each line in the file to the card list
-        //3. put in collection as document with setCode and cardList full.
         let fileStream = fs.createReadStream(`./temp/images/${file}`);
         let rl = readline.createInterface({input: fileStream, crlfDelay: 10});
         rl.on("line", data => {cardList.push(data)});
@@ -53,11 +53,11 @@ const loadMTGSetImages = () =>
 
 }
 
-const addMTGSetWithCardsToDB = mtgData =>
+const addMTGSetWithCardsToDB = (mtgData) =>
 {
     try
     {
-        mtgSetWithCardsModel.insertMany(mtgData)
+        mtgSetCodeWithCardsModel.insertMany(mtgData)
         .then(result => {console.log(result)});
     }
     catch (error)
@@ -66,6 +66,24 @@ const addMTGSetWithCardsToDB = mtgData =>
     }
 }
 
-const mtgDBScript = {loadMTGSetData, loadMTGSetImages};
+const loadMTGCardData = () =>
+{
+    const fileStream = fs.createReadStream("./temp/all-cards");
+    const rl = readline.createInterface({input:fileStream, crlfDelay: 10});
+    rl.on('line', addMTGCardDataToDB)
+}
+
+const addMTGCardDataToDB = (mtgCardData) =>
+{
+    // TODO find out how to match the code
+    const matches_title= mtgCardData.match(title_re)
+    const matches_src= mtgCardData.match(src_re)
+    
+    console.log(matches_title, matches_src)
+    
+    // mtgCardsModel.insertMany()
+}
+
+const mtgDBScript = {loadMTGSetData, loadMTGSetImages, loadMTGCardData};
 
 module.exports = {mtgDBScript};
