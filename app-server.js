@@ -1,7 +1,7 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
-const { mtgFeatureService } = require("./mtg-feature-service.js");
-const { stripeFeatureService } = require("./stripe-feature-service.js")
-const { createUserRequest, logInUserRequest, logOutUserRequest } = require("./user-service.js"); // API endpoints
+const { mtgFeatureService } = require("./services/mtg-feature-service.js");
+const { stripeFeatureService } = require("./services/stripe-feature-service.js")
+const { createUserRequest, logInUserRequest, logOutUserRequest } = require("./services/user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
 const express = require("express"); // backend framework

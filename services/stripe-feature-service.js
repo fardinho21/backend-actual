@@ -32,6 +32,16 @@ const createProduct = (app) =>
     })
 }
 
+const updateProduct = (app) => 
+{
+    app.post("", (req, res) =>
+    {
+        const product = stripe.products.create({
+            // TODO: use req to fill in product name and metadata
+        })
+    })
+}
+
 const createPaymentRequest = (app) =>
 {
     app.post("", (req, res) =>
@@ -41,6 +51,6 @@ const createPaymentRequest = (app) =>
 }
 
 
-const stripeFeatureService = {checkoutSession, createCustomer, createProduct, createPaymentRequest}
+const stripeFeatureService = {checkoutSession, createCustomer, createProduct, updateProduct,createPaymentRequest}
 
 module.exports = {stripeFeatureService}
