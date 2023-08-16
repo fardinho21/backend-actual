@@ -3,7 +3,7 @@ const stripe = require('stripe')('pk_test_51M0qRCDXPJlr8jYiVDeeC3uxrYeRjLFZxMIWd
 const checkoutSession = (app) =>
 {
     // The request should contain a list of products chosen by the user
-    app.post("", (req, res) => 
+    app.post("/stripe-feature-service/create-checkout-session/", (req, res) => 
     {
         const session = stripe.checkout.sessions.create({
             //TODO: refer to docs about creating and using checkout sessions
@@ -13,14 +13,14 @@ const checkoutSession = (app) =>
 
 const createCustomer = (app) =>
 {
-    app.post("/stripe-feature-service/create-customer/", (req, res) =>
+    app.post("/stripe-feature-service/create-customer/", (req, res) => 
     {
         const customer = stripe.customers.create({
             name: req.body.name,
             email: req.body.email,
             address: req.body.address
-        })
-        .then(result => {
+        }).then(result => 
+        {
             console.log("Customer:", customer.id)
             res.status(200).json(result)
         })

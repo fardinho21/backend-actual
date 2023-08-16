@@ -1,3 +1,5 @@
+curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-checkout-session/
+
 curl -X POST -H "Content-Type: application/json" -d '{"email":"email@email.com", "name":"John Smith"}' http://localhost:8080/stripe-feature-service/create-customer
 
 curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-product
@@ -5,5 +7,8 @@ curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/s
 curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/update-product
 
 curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-payment-request
+
+
+curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-payment-card
 
 
