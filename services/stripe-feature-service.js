@@ -13,18 +13,23 @@ const checkoutSession = (app) =>
 
 const createCustomer = (app) =>
 {
-    app.post("", (req, res) =>
+    app.post("/stripe-feature-service/create-customer/", (req, res) =>
     {
         const customer = stripe.customers.create({
-            //TODO: use req to fill out customers 
-            //TODO: we need to decide what info to collect from customers
+            name: req.body.name,
+            email: req.body.email,
+            address: req.body.address
+        })
+        .then(result => {
+            console.log("Customer:", customer.id)
+            res.status(200).json(result)
         })
     })
 }
 
 const createProduct = (app) =>
 {
-    app.post("", (req, res) =>
+    app.post("/stripe-feature-service/create-product/", (req, res) =>
     {
         const product = stripe.products.create({
             // TODO: use req to fill in product name and metadata
@@ -34,9 +39,9 @@ const createProduct = (app) =>
 
 const updateProduct = (app) => 
 {
-    app.post("", (req, res) =>
+    app.post("/stripe-feature-service/update-product/", (req, res) =>
     {
-        const product = stripe.products.create({
+        const product = stripe.products.update({
             // TODO: use req to fill in product name and metadata
         })
     })
@@ -44,13 +49,21 @@ const updateProduct = (app) =>
 
 const createPaymentRequest = (app) =>
 {
-    app.post("", (req, res) =>
+    app.post("/stripe-feature-service/create-payment-request/", (req, res) =>
     {
         const paymentRequest = stripe.paymentRequest({/*TODO fillout request*/});
     })
 }
 
+const createPaymentCard = (app) =>
+{
+    app.post("/stripe-feature-service/create-payment-card/", (req, res) => 
+    {
 
-const stripeFeatureService = {checkoutSession, createCustomer, createProduct, updateProduct,createPaymentRequest}
+    })
+}
+
+
+const stripeFeatureService = {checkoutSession, createCustomer, createProduct, updateProduct,createPaymentRequest, createPaymentCard}
 
 module.exports = {stripeFeatureService}
