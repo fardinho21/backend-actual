@@ -6,6 +6,7 @@ mongoose.connect("mongodb://localhost:27017/local");
 const mtgSetModel = mongoose.model("mtgSetTitles", dataBaseSchemas.MTGSetSchema);
 const mtgSetCodeModel = mongoose.model("mtgSetWithCards", dataBaseSchemas.MTGCardSchema)
 const mtgSetCodesWithCardsModel = mongoose.model("mtgSetCodesWithCards", dataBaseSchemas.MTGSetCodeWithCardsSchema);
+const mtgAllCardsModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchema);
 
 const searchCardByName = (app) => 
 {

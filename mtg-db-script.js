@@ -2,6 +2,7 @@ const fs = require("fs");
 const readline = require("readline");
 const mongoose = require("mongoose");
 const {dataBaseSchemas} = require("./database-schemas.js");
+const {stripeScript} = require("./stripe-script.js");
 
 // DATA BASE SCHEMAS AND MODELS
 mongoose.connect("mongodb://localhost:27017/local")
@@ -75,7 +76,7 @@ const loadMTGCardData = () =>
 
 const addMTGCardDataToDB = (mtgCardData) =>
 {
-    // TODO find out how to match the code
+
     const matches_title= mtgCardData.match(title_re);
     const matches_src= mtgCardData.match(src_re);
     const vals= matches_title[0].split("(");
@@ -86,12 +87,12 @@ const addMTGCardDataToDB = (mtgCardData) =>
     setCode=setCode.replace('"','')
     imageUrl=imageUrl.replace('"','').replace('"','')
     const objectToDB= {cardName: cardName, setCode: setCode, imageUrl: imageUrl};
+    
+    // mtgCardsModel.insertMany(objectToDB)
+    // .then(result => {console.log(result)});
+    
+    stripeScript.createProduct(objectToDB)
 
-    // console.log(objectToDB);
-    
-    mtgCardsModel.insertMany(objectToDB)
-    .then(result => {console.log(result)});
-    
 }
 
 const mtgDBScript = {loadMTGSetData, loadMTGSetImages, loadMTGCardData};
