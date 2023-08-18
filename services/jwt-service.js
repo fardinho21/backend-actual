@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { clearInterval } = require("timers");
-const { dataBaseSchemas } = require("./database-schemas");
+const { dataBaseSchemas } = require("../db-schemas/database-schemas");
 mongoose.connect("mongodb://localhost:27017/local");
 const userModel = mongoose.model("users", dataBaseSchemas.UserSchema)
 

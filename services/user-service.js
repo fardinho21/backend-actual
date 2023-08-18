@@ -5,7 +5,7 @@ const {bcryptHelper} = require("./bcrypt-service.js");
 
 // DATA BASE SCHEMAS AND MODELS
 const mongoose = require("mongoose");
-const {dataBaseSchemas} = require("../database-schemas.js")
+const {dataBaseSchemas} = require("../db-schemas/database-schemas.js")
 mongoose.connect("mongodb://localhost:27017/local");
 const userModel = mongoose.model("users", dataBaseSchemas.UserSchema);
 

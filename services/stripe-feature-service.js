@@ -1,4 +1,4 @@
-const stripe = require('stripe')('pk_test_51M0qRCDXPJlr8jYiVDeeC3uxrYeRjLFZxMIWd7N9VLutTtIyzKIBtVy0I6K5KesiSQYMIKBASmgCBCf92ZUUpAzz00jiuU98pa')
+const stripe = require('stripe')('sk_test_51M0qRCDXPJlr8jYiuJSnkv6EGDgxcfYAVrjpCQwbALQGBW0Nm8DGI8YAO8RyFRB3nVWtgzR4HJ5o2eNeEvH7Ec9Y00tabnrPFs')
 
 const checkoutSession = (app) =>
 {
@@ -23,7 +23,12 @@ const createCustomer = (app) =>
         {
             console.log("Customer:", customer.id)
             res.status(200).json(result)
+        }).catch(error => 
+        {
+            console.log(error)
+            res.status(500).json(error)
         })
+
     })
 }
 

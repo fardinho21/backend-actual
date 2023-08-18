@@ -1,7 +1,7 @@
 
 // DATA BASE SCHEMAS AND MODELS
 const mongoose = require("mongoose");
-const {dataBaseSchemas} = require("./database-schemas.js");
+const {dataBaseSchemas} = require("../db-schemas/database-schemas.js");
 mongoose.connect("mongodb://localhost:27017/local");
 const mtgSetModel = mongoose.model("mtgSetTitles", dataBaseSchemas.MTGSetSchema);
 const mtgSetCodeModel = mongoose.model("mtgSetWithCards", dataBaseSchemas.MTGCardSchema)

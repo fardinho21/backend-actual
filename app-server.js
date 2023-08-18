@@ -31,6 +31,9 @@ mtgFeatureService.searchSetByName(app)
 mtgFeatureService.searchSetByCode(app)
 stripeFeatureService.checkoutSession(app);
 stripeFeatureService.createProduct(app);
+stripeFeatureService.createCustomer(app);
+stripeFeatureService.createCustomer(app);
+
 /////////////////// USER SERVICES ENDPOINTS END
 /////////////////////// API CODE ENDS HERE ////////////////////
 
