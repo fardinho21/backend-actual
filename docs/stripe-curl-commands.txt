@@ -1,6 +1,6 @@
 curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-checkout-session/
 
-curl -X POST -H "Content-Type: application/json" -d '{"email":"email@email.com", "name":"John Smith", "address":"1234 Road Ave"}' http://localhost:8080/stripe-feature-service/create-customer
+curl -X POST -H "Content-Type: application/json" -d '{"email":"email@email.com", "name":"John Smith", "address":{"city":"Sin City","state":"State","country":"US","postal_code":"12345"}}' http://localhost:8080/stripe-feature-service/create-customer
 
 curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-product
 

@@ -18,7 +18,8 @@ const createCustomer = (app) =>
         const customer = stripe.customers.create({
             name: req.body.name,
             email: req.body.email,
-            address: req.body.address
+            address: req.body.address,
+            description: "new"
         }).then(result => 
         {
             console.log("Customer:", customer.id)
