@@ -22,7 +22,7 @@ const createCustomer = (app) =>
             description: "new"
         }).then(result => 
         {
-            console.log("Customer:", customer.id)
+            console.log("Customer: ", customer.id)
             res.status(200).json(result)
         }).catch(error => 
         {
@@ -37,8 +37,16 @@ const createProduct = (app) =>
 {
     app.post("/stripe-feature-service/create-product/", (req, res) =>
     {
+        var meta = {cardList: req.body.cardList}
         const product = stripe.products.create({
-            // TODO: use req to fill in product name and metadata
+            name: req.body.productName,
+            metadata: meta
+        }).then(result => {
+            console.log("Product: ", result)
+            res.status(200).json(result)
+        }).catch(error => {
+            console.log(error)
+            res.status(500).json(error)
         })
     })
 }
