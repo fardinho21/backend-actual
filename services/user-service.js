@@ -14,15 +14,18 @@ const sanitizeHeaderPayload = [
     check('header', "Header must be an object.").isObject(), 
     check('payload', "Payload must be an object.").isObject()
 ];
+
 const sanitizeAuthentication = [
     check("authentication", "Invalid token format.").contains(".", {minOccurrences:2}), 
     check('authentication').matches(/(([A-Za-z0-9_-]+).){2}([A-Za-z0-9_-]+)/)
 ];
+
 const sanitizeUserRequest = [
     body('payload.username').isLength({max:25,min:6}), 
     body('payload.password').isLength({max:15,min:6}), 
     ...sanitizeHeaderPayload
 ];
+
 // API END POINTS
 const createUserRequest = (app, mongoose) => {
     app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {

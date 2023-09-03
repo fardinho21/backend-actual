@@ -37,7 +37,10 @@ const createProduct = (app) =>
 {
     app.post("/stripe-feature-service/create-product/", (req, res) =>
     {
-        var meta = {cardList: req.body.cardList}
+        // TODO: convert list of product ids into metadata key-value pairs
+        // attention: cardList in the request body contains a list of product IDs. This list should be converted into a Stripe product metadata attribute, holding keys as cardX and values as product IDs to a specific card
+
+        var meta = req.body.cardList //cardName : quantity
         const product = stripe.products.create({
             name: req.body.productName,
             metadata: meta
