@@ -13,10 +13,8 @@ const searchCardByName = (app) =>
 {
     app.post("/search-card-by-name/", (req, res) =>
     {
-        console.log(req.body.cardName)
-        mtgAllCardsModel.find({ cardName: { $regex :req.body.cardName } }).limit(5)
+        mtgAllCardsModel.find({ cardName: { $regex :req.body.cardName } }).skip(req.body.skipNum * 5).limit(req.body.limitNum)
             .then(data => {
-                console.log(data)
                 res.status(200).json(data)
             })
     })
@@ -26,10 +24,8 @@ const searchSetByName = (app) =>
 {
     app.post("/search-set-by-name/", (req, res) => 
     {
-        console.log(req.body.setName)
-        mtgSetModel.find({ setName: { $regex: req.body.setName } })
+        mtgSetModel.find({ setName: { $regex: req.body.setName } }).skip(req.body.skipNum * 5).limit(req.body.limitNum)
             .then(data => {
-                console.log(data)
                 res.status(200).json(data)
             })
     })
@@ -39,10 +35,8 @@ const searchSetByCode = (app) =>
 {
     app.post("/search-set-by-code/", (req, res) => 
     {
-        console.log(req.body.setCode)
-        mtgSetCodeModel.find({ setCode: { $regex: req.body.setCode } })
+        mtgSetCodeModel.find({ setCode: { $regex: req.body.setCode } }).skip(req.body.skipNum * 5).limit(req.body.limitNum)
             .then(data => {
-                // console.log(data)
                 res.status(200).json(data)
             })
     })
