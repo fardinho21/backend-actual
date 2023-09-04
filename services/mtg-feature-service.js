@@ -14,7 +14,7 @@ const searchCardByName = (app) =>
     app.post("/search-card-by-name/", (req, res) =>
     {
         console.log(req.body.cardName)
-        mtgAllCardsModel.find({ cardName: { $regex :req.body.cardName } })
+        mtgAllCardsModel.find({ cardName: { $regex :req.body.cardName } }).limit(5)
             .then(data => {
                 console.log(data)
                 res.status(200).json(data)
