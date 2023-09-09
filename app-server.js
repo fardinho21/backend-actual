@@ -1,7 +1,8 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
 const { mtgFeatureService } = require("./services/mtg-feature-service.js");
-const { stripeFeatureService } = require("./services/stripe-feature-service.js")
-const { createUserRequest, logInUserRequest, logOutUserRequest } = require("./services/user-service.js"); // API endpoints
+const { stripeFeatureService } = require("./services/stripe-feature-service.js");
+const { shippingFeatureService } = require("./services/shipping-feature-service.js");
+const { userService } = require("./services/user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
 const express = require("express"); // backend framework
@@ -23,9 +24,9 @@ app.disable("x-powered-by")
 
 
 /////////////////// USER SERVICES ENDPOINTS START
-createUserRequest(app, mongoose);
-logInUserRequest(app, mongoose);
-logOutUserRequest(app, mongoose);
+userService.createUserRequest(app);
+userService.logInUserRequest(app);
+userService.logOutUserRequest(app);
 mtgFeatureService.searchCardByName(app);
 mtgFeatureService.searchSetByName(app)
 mtgFeatureService.searchSetByCode(app)
@@ -33,7 +34,10 @@ stripeFeatureService.checkoutSession(app);
 stripeFeatureService.createProduct(app);
 stripeFeatureService.createCustomer(app);
 stripeFeatureService.createCustomer(app);
-
+shippingFeatureService.createShippingLabel(app);
+shippingFeatureService.calculateCostAndTax(app);
+shippingFeatureService.createShippingLabel(app);
+shippingFeatureService.validateAddress(app);
 /////////////////// USER SERVICES ENDPOINTS END
 /////////////////////// API CODE ENDS HERE ////////////////////
 

@@ -27,7 +27,7 @@ const sanitizeUserRequest = [
 ];
 
 // API END POINTS
-const createUserRequest = (app, mongoose) => {
+const createUserRequest = (app) => {
     app.post("/create-user-request/", sanitizeUserRequest, (req, res, next) => {
         // sanitize the request
         const result = validationResult(req);
@@ -80,7 +80,7 @@ const createUser = (req, res) => {
     
 };
 
-const logInUserRequest = (app, mongoose) => {
+const logInUserRequest = (app) => {
     app.post("/login-user-request/", sanitizeUserRequest, (req, res, next) => {
         // sanitize the request
         const result = validationResult(req);
@@ -141,7 +141,7 @@ const logInUser = (req, res) => {
     });
 };
 
-const logOutUserRequest = (app, mongoose) => {
+const logOutUserRequest = (app) => {
     app.post("/logout-user-request/", sanitizeAuthentication, (req, res, next) => {
         
         // sanitize the request
@@ -219,4 +219,5 @@ const logOutUser = (req, res) => {
     });
 };
 
-module.exports = {createUserRequest, logInUserRequest, logOutUserRequest};
+const userService = {createUserRequest, logInUserRequest, logOutUserRequest};
+module.exports = userService;
