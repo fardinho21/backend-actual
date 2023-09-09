@@ -220,4 +220,4 @@ const logOutUser = (req, res) => {
 };
 
 const userService = {createUserRequest, logInUserRequest, logOutUserRequest};
-module.exports = userService;
+module.exports = {userService};

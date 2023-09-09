@@ -15,6 +15,7 @@ const searchCardByName = (app) =>
     {
         mtgAllCardsModel.find({ cardName: { $regex :req.body.cardName } }).skip(req.body.skipNum * 5).limit(req.body.limitNum)
             .then(data => {
+                console.log(data)
                 res.status(200).json(data)
             })
     })
