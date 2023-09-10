@@ -27,6 +27,7 @@ const searchSetByName = (app) =>
     {
         mtgSetModel.find({ setName: { $regex: req.body.setName } }).skip(req.body.skipNum * 5).limit(req.body.limitNum)
             .then(data => {
+                console.log(data)
                 res.status(200).json(data)
             })
     })
