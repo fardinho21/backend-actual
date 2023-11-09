@@ -1,4 +1,9 @@
 const stripe = require('stripe')('sk_test_51M0qRCDXPJlr8jYiuJSnkv6EGDgxcfYAVrjpCQwbALQGBW0Nm8DGI8YAO8RyFRB3nVWtgzR4HJ5o2eNeEvH7Ec9Y00tabnrPFs')
+const mongoose = require("mongoose");
+const { dataBaseSchemas } = require('../db-schemas/database-schemas');
+mongoose.connect("mongodb://localhost:27017/local");
+
+const customerModel = mongoose.model("customerData", dataBaseSchemas.CustomerSchema);
 
 const checkoutSession = (app) =>
 {
@@ -13,7 +18,7 @@ const checkoutSession = (app) =>
 
 const createCustomer = (app) =>
 {
-    app.post("/stripe-feature-service/create-customer/", (req, res) => 
+    app.post("/stripe-feature-service/create-customer/", (req, res, next) => 
     {
         const customer = stripe.customers.create({
             name: req.body.name,
@@ -22,14 +27,35 @@ const createCustomer = (app) =>
             description: "new"
         }).then(result => 
         {
-            console.log("Customer: ", customer.id)
-            res.status(200).json(result)
+            console.log("Customer: ", result.id)
+            res.locals.customerID = result.id
+            next();
         }).catch(error => 
         {
             console.log(error)
             res.status(500).json(error)
         })
 
+    })
+}
+
+const storeNewCustomerData = (app) =>
+{
+    app.post("/stripe-feature-service/create-customer/", (req, res) => {
+        console.log("storeNewCustomerData into mongoDB", res.locals.customerID)
+        customerModel.insertMany({customerID: res.locals.customerID, customerName: "", address: "", email: ""})
+        .then(data => 
+        {
+            console.log(data)
+            res.status(200).json({
+                customerID: res.locals.customerID, 
+                mongoDB: data[0]._id
+            })
+        }).catch(error =>
+        {
+            console.log(error)
+            res.status(500).json(error)
+        });
     })
 }
 
@@ -74,6 +100,14 @@ const createPaymentRequest = (app) =>
 
 const createPaymentCard = (app) =>
 {
+    app.post("/stripe-feature-service/create-payment-card/", (req, res, next) => 
+    {
+
+    })
+}
+
+const addPaymentCardToExistingCustomer = (app) =>
+{
     app.post("/stripe-feature-service/create-payment-card/", (req, res) => 
     {
 
@@ -81,6 +115,14 @@ const createPaymentCard = (app) =>
 }
 
 
-const stripeFeatureService = {checkoutSession, createCustomer, createProduct, updateProduct,createPaymentRequest, createPaymentCard}
+const stripeFeatureService = {
+    checkoutSession, 
+    storeNewCustomerData,
+    createCustomer, 
+    createProduct, 
+    updateProduct,
+    createPaymentRequest, 
+    createPaymentCard
+}
 
 module.exports = {stripeFeatureService}

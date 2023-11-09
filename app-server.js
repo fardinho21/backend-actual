@@ -28,12 +28,15 @@ userService.createUserRequest(app);
 userService.logInUserRequest(app);
 userService.logOutUserRequest(app);
 mtgFeatureService.searchCardByName(app);
-mtgFeatureService.searchSetByName(app)
+// mtgFeatureService.searchSetByName(app)
 mtgFeatureService.searchSetByCode(app)
 stripeFeatureService.checkoutSession(app);
 stripeFeatureService.createProduct(app);
+stripeFeatureService.updateProduct(app);
 stripeFeatureService.createCustomer(app);
-stripeFeatureService.createCustomer(app);
+stripeFeatureService.createPaymentCard(app);
+stripeFeatureService.createPaymentRequest(app);
+stripeFeatureService.storeNewCustomerData(app);
 shippingFeatureService.createShippingLabel(app);
 shippingFeatureService.calculateCostAndTax(app);
 shippingFeatureService.createShippingLabel(app);

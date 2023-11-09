@@ -7,6 +7,13 @@ const UserSchema = mongoose.Schema({
     expires: Date
 });
 
+const CustomerSchema = mongoose.Schema({
+    customerName: String,
+    address: String,
+    email: String,
+    customerID: String
+})
+
 const MTGCardSchema = mongoose.Schema({
     cardName: String,
     setCode: String,
@@ -28,6 +35,13 @@ const MTGProductSchema = mongoose.Schema({
     cardList: [MTGCardSchema]
 })
 
-const dataBaseSchemas = {UserSchema, MTGSetSchema, MTGCardSchema, MTGSetCodeWithCardsSchema, MTGProductSchema}
+const dataBaseSchemas = {
+    UserSchema, 
+    CustomerSchema,
+    MTGSetSchema, 
+    MTGCardSchema, 
+    MTGSetCodeWithCardsSchema, 
+    MTGProductSchema
+}
 
 module.exports = {dataBaseSchemas}

@@ -77,6 +77,13 @@ const checkForValidTokensInterval = setInterval(() => {
 
 }, 5000);
 
-const jwtHelper = {jwtGenerateToken, jwtAuthenticateToken, jwtCheckTokenStatuses, jwtInvalidateExpiredTokens, jwtClearCheckForValidTokensInterval, checkForValidTokensInterval};
+const jwtHelper = {
+    jwtGenerateToken, 
+    jwtAuthenticateToken, 
+    jwtCheckTokenStatuses, 
+    jwtInvalidateExpiredTokens, 
+    jwtClearCheckForValidTokensInterval, 
+    checkForValidTokensInterval
+};
 
 module.exports = {jwtHelper};
