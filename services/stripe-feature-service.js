@@ -4,6 +4,7 @@ const { dataBaseSchemas } = require('../db-schemas/database-schemas');
 mongoose.connect("mongodb://localhost:27017/local");
 
 const customerModel = mongoose.model("customerData", dataBaseSchemas.CustomerSchema);
+const paymentCardModel = mongoose.model("paymentCardData", dataBaseSchemas.PaymentCardSchema);
 
 const checkoutSession = (app) =>
 {
@@ -98,22 +99,26 @@ const createPaymentRequest = (app) =>
     })
 }
 
-const createPaymentCard = (app) =>
+// TODO - add payment card details to stripe-curl-command.txt for the corresponding curl command
+// TODO - investigate if stripe.createToken is needed for this endpoint
+// TODO - create the card and add it to the customer 
+const createPaymentCardForExistingCustomer = (app) =>
 {
     app.post("/stripe-feature-service/create-payment-card/", (req, res, next) => 
     {
-
+        console.log(req.body.customerID)
+        stripe.customers.retrieve(req.body.customerID)
+        .then(customer => 
+        {
+            // stripe.customers.createSource(req.body.customerID, {source: })
+            console.log(customer)
+            res.status(200).json("Hello World")
+        }).catch(error => 
+        {
+            res.status(500).json(error)
+        })
     })
 }
-
-const addPaymentCardToExistingCustomer = (app) =>
-{
-    app.post("/stripe-feature-service/create-payment-card/", (req, res) => 
-    {
-
-    })
-}
-
 
 const stripeFeatureService = {
     checkoutSession, 
@@ -122,7 +127,7 @@ const stripeFeatureService = {
     createProduct, 
     updateProduct,
     createPaymentRequest, 
-    createPaymentCard
+    createPaymentCardForExistingCustomer
 }
 
 module.exports = {stripeFeatureService}

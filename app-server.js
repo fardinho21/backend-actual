@@ -34,7 +34,7 @@ stripeFeatureService.checkoutSession(app);
 stripeFeatureService.createProduct(app);
 stripeFeatureService.updateProduct(app);
 stripeFeatureService.createCustomer(app);
-stripeFeatureService.createPaymentCard(app);
+stripeFeatureService.createPaymentCardForExistingCustomer(app);
 stripeFeatureService.createPaymentRequest(app);
 stripeFeatureService.storeNewCustomerData(app);
 shippingFeatureService.createShippingLabel(app);

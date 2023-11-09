@@ -14,6 +14,11 @@ const CustomerSchema = mongoose.Schema({
     customerID: String
 })
 
+const PaymentCardSchema = mongoose.Schema({
+    cardID: String,
+    customerID: String
+})
+
 const MTGCardSchema = mongoose.Schema({
     cardName: String,
     setCode: String,
@@ -38,6 +43,7 @@ const MTGProductSchema = mongoose.Schema({
 const dataBaseSchemas = {
     UserSchema, 
     CustomerSchema,
+    PaymentCardSchema,
     MTGSetSchema, 
     MTGCardSchema, 
     MTGSetCodeWithCardsSchema, 
