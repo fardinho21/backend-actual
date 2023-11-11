@@ -8,6 +8,6 @@ curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/s
 
 curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/stripe-feature-service/create-payment-request
 
-curl -X POST -H "Content-Type: application/json" -d '{"customerID":"cus_OyTMAFq4JHU4sY"}' http://localhost:8080/stripe-feature-service/create-payment-card
+curl -X POST -H "Content-Type: application/json" -d '{"customerID":"cus_OyTMAFq4JHU4sY", cardToken: ""}' http://localhost:8080/stripe-feature-service/create-payment-card
 
 

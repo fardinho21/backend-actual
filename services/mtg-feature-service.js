@@ -5,9 +5,9 @@ const {dataBaseSchemas} = require("../db-schemas/database-schemas.js");
 
 mongoose.connect("mongodb://localhost:27017/local");
 const mtgSetModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchema);
-const mtgSetCodeModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchema)
-const mtgSetCodesWithCardsModel = mongoose.model("mtgSetCodesWithCards", dataBaseSchemas.MTGSetCodeWithCardsSchema);
+const mtgSetCodeModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchema);
 const mtgAllCardsModel = mongoose.model("mtgAllCards", dataBaseSchemas.MTGCardSchema);
+const mtgSetCodesWithCardsModel = mongoose.model("mtgSetCodesWithCards", dataBaseSchemas.MTGSetCodeWithCardsSchema);
 
 const searchCardByName = (app) => 
 {

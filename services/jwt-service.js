@@ -44,7 +44,6 @@ const jwtAuthenticateToken = (token) => {
     }, err => {throw new Error("Server Error - ", err)});
 };
 
-
 const jwtCheckTokenStatuses = () => {
     return userModel.find({expires: {$lt: new Date()}})
 };
