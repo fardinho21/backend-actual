@@ -1,0 +1,23 @@
+Checkout session 
+    PaymentIntents
+        Products
+            Prices
+        Customer 
+            Card
+
+Tokenized URLS can be sent back to the user for checkout session management
+
+Checkout Component Starts
+    \
+     `-> Checkout session is created in stripe backend
+      `-> Checkout session ID is saved into mongoDB along with user's jwtToken
+
+Customer Enters Personal Details
+    \
+     `-> Customer Object is created in stripe backend
+      `-> Customer object is stored into mongoDB along with checkout sessionID
+
+Customer Enters Card Details
+    \
+     `-> Card token is generated and sent to node.js backend
+      `-> node.js uses stripe to add card token to customer

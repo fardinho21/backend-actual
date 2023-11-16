@@ -13,6 +13,11 @@ const checkoutSession = (app) =>
     {
         const session = stripe.checkout.sessions.create({
             //TODO: refer to docs about creating and using checkout sessions
+            // customer: <customer_id>
+            // line_items: [{price: <price_code>}]
+            // mode: 'payment
+            // expires_at: <seconds>
+            //
         })
     });
 }
