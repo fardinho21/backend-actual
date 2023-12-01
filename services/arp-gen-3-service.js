@@ -9,18 +9,19 @@ const submitUserInputEndpoint = (app) =>
     {
         try 
         {
-            
+            console.log(req)
+            next()
         } 
         catch (error) 
         {
-            
+            res.status(500).json(error);
         }
     })
 };
 
 const arpeggiateScale = (app) =>
 {
-    app.get("/arppeggiateScale/", (req, res) => 
+    app.get("/arpgen3/arpeggiate-scale/", (req, res) => 
     {
         try 
         {
