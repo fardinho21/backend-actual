@@ -9,50 +9,52 @@ const submitUserInputEndpoint = (app) =>
     {
         try 
         {
-            console.log(req)
+            console.log(req.body)
             next()
         } 
         catch (error) 
         {
             res.status(500).json(error);
         }
-    })
+    }, arpeggiateScale)
 };
 
-const arpeggiateScale = (app) =>
+const arpeggiateScale = (req, res) => 
 {
-    app.get("/arpgen3/arpeggiate-scale/", (req, res) => 
+    try 
     {
-        try 
+        const spawn = require("child_process").spawn;
+        console.log("arp-gen-3-service:: arpeggiateScale")
+
+        // Spawn python process
+        var note = req.body.note;
+        var scale = req.body.scale;
+        var startingString = req.body.startingString;
+        var startingOctave = req.body.startingOctave;
+        // var direction = req.body.direction;
+        // var axis = req.body.axis;
+
+        const python3Process = spawn('python3', ["services/arp-gen-utils/py-arp-gen-3/main.py", note, scale, startingString, startingOctave, "ASCENDING", "VERTICAL"])
+
+        python3Process.stdout.on('data', async data => 
         {
-            const spawn = require("child_process").spawn;
-            console.log("arp-gen-3-service:: arpeggiateScale")
-
-            // Spawn python process
-            var root = req.body.root;
-            var scale = req.body.scale;
-            var startStringIndex = req.body.startStringIndex;
-            var startOctave = req.body.startOctave;
-            var direction = req.bddy.direction;
-            var axis = req.body.axis;
-
-            const python3Process = spawn('python3', ["arp-gen-utils/py-arp-gen-3/main.py", root, scale, startStringIndex, startOctave, direction, axis])
-
-            python3Process.stdout.on('data', async data => {
-                res.status(200).json(await data.toString())
-            })
-            python3Process.stderr.on('data', async data => {
-                console.log(await data.toString())
-                res.status(500).json({ "error": "Server Error - script error" })
-            })
-        } 
-        catch (error) 
+            console.log(data)
+            var fin = await data.toString()
+            res.status(200).json(fin)
+        })
+        python3Process.stderr.on('data', async data => 
         {
-            res.status(500).json({"error": "Server Error "})
-        }
-    })
+            console.log(await data.toString())
+            res.status(500).json({ "error": "Server Error - script error" })
+        })
+    }
+    catch (error) 
+    {
+        res.status(500).json({ "error": "Server Error " })
+    }
 };
 
+//TODO
 const checkSubscriptionStatus = (app) =>
 {
     app.get("/arpgen3/check-subscription-status/", (req, res) =>
@@ -70,7 +72,6 @@ const checkSubscriptionStatus = (app) =>
 
 const arpGen3Service = 
 {
-    arpeggiateScale,
     checkSubscriptionStatus,
     submitUserInputEndpoint,
 };

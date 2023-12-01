@@ -1,2 +1,2 @@
 
-curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:8080/submit-user-input
+curl -X POST -H "Content-Type: application/json" -d '{"note":"F", "scale":"myx", "startingString":"2", "startingOctave":"4"}' http://localhost:8080/submit-user-input

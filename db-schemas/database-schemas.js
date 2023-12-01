@@ -24,7 +24,6 @@ const ArpeggioUserInputTable = mongoose.Schema({
     supported: Boolean
 })
 
-
 const dataBaseSchemas = {
     UserSchema, 
     CustomerSchema,

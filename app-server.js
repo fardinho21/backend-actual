@@ -39,7 +39,7 @@ stripeFeatureService.storeNewCustomerData(app);
 
 
 /////////////////// ARP-GEN-3 FEATURE SERVICE ENDPOINTS END
-arpGen3Service.arpeggiateScale(app);
+arpGen3Service.submitUserInputEndpoint(app);
 /////////////////// ARP-GEN-3 FEATURE SERVICE ENDPOINTS END
 
 
