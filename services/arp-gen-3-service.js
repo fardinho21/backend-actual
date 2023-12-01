@@ -31,10 +31,11 @@ const arpeggiateScale = (req, res) =>
         var scale = req.body.scale;
         var startingString = req.body.startingString;
         var startingOctave = req.body.startingOctave;
+        var fretOrNote = req.body.fretOrNote
         // var direction = req.body.direction;
         // var axis = req.body.axis;
 
-        const python3Process = spawn('python3', ["services/arp-gen-utils/py-arp-gen-3/main.py", note, scale, startingString, startingOctave, "ASCENDING", "VERTICAL"])
+        const python3Process = spawn('python3', ["services/arp-gen-utils/py-arp-gen-3/main.py", note, scale, startingString, startingOctave, "ASCENDING", "VERTICAL", fretOrNote])
 
         python3Process.stdout.on('data', async data => 
         {
