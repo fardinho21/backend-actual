@@ -19,11 +19,17 @@ const PaymentCardSchema = mongoose.Schema({
     customerID: String
 })
 
+const ArpeggioUserInputTable = mongoose.Schema({
+    inputString: String,
+    supported: Boolean
+})
+
 
 const dataBaseSchemas = {
     UserSchema, 
     CustomerSchema,
     PaymentCardSchema,
+    ArpeggioUserInputTable
 }
 
 module.exports = {dataBaseSchemas}

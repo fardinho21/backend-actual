@@ -1,7 +1,23 @@
-
+const {dataBaseSchemas} = require("../db-schemas/database-schemas.js")
 
 
 // API ENDPOINTS
+
+const submitUserInputEndpoint = (app) =>
+{
+    app.post("/arpgen3/submit-user-input", (req, res, next) => 
+    {
+        try 
+        {
+            
+        } 
+        catch (error) 
+        {
+            
+        }
+    })
+};
+
 const arpeggiateScale = (app) =>
 {
     app.get("/arppeggiateScale/", (req, res) => 
@@ -38,7 +54,7 @@ const arpeggiateScale = (app) =>
 
 const checkSubscriptionStatus = (app) =>
 {
-    app.get("/arpgen3/checkSubscriptionStatus/", (req, res) =>
+    app.get("/arpgen3/check-subscription-status/", (req, res) =>
     {
         try 
         {
@@ -55,6 +71,7 @@ const arpGen3Service =
 {
     arpeggiateScale,
     checkSubscriptionStatus,
+    submitUserInputEndpoint,
 };
 
 module.exports = {arpGen3Service};
