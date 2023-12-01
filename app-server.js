@@ -1,6 +1,5 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
 const { stripeFeatureService } = require("./services/stripe-feature-service.js");
-const { shippingFeatureService } = require("./services/shipping-feature-service.js");
 const { arpGen3Service } = require("./services/arp-gen-3-service.js")
 const { userService } = require("./services/user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
