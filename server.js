@@ -3,7 +3,8 @@ const http = require("http");
 // const https = require("https");
 const {app} = require("./app-server.js");
 const { jwtHelper } = require("./services/jwt-service.js")
-const port = parseInt(process.env.PORT) || 8080;
+// const port = parseInt(process.env.PORT) || 8080;
+const port = 8080
 
 // DO NOT DELETE
 // const options = {
