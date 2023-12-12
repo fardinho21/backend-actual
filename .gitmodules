@@ -1,0 +1,3 @@
+[submodule "services/nodejs-arp-gen"]
+	path = services/nodejs-arp-gen
+	url = https://github.com/fardinho21/nodejs-arp-gen.git
