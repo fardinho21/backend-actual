@@ -1,5 +1,5 @@
 const {dataBaseSchemas} = require("../db-schemas/database-schemas.js")
-
+const {ArpeggioGenerator} = require("../services/nodejs-arp-gen/ArpeggioGenerator.js")
 
 // API ENDPOINTS
 
@@ -9,7 +9,6 @@ const submitUserInputEndpoint = (app) =>
     {
         try 
         {
-            console.log(req.body)
             next()
         } 
         catch (error) 
@@ -19,12 +18,10 @@ const submitUserInputEndpoint = (app) =>
     }, arpeggiateScale)
 };
 
-const arpeggiateScale = (req, res) => 
+const arpeggiateScale = async (req, res) => 
 {
     try 
     {
-        const spawn = require("child_process").spawn;
-        console.log("arp-gen-3-service:: arpeggiateScale")
 
         // Spawn python process
         var note = req.body.note;
@@ -35,19 +32,18 @@ const arpeggiateScale = (req, res) =>
         // var direction = req.body.direction;
         // var axis = req.body.axis;
 
-        const python3Process = spawn('python3', ["services/arp-gen-utils/py-arp-gen-3/main.py", note, scale, startingString, startingOctave, "ASCENDING", "VERTICAL", fretOrNote])
 
-        python3Process.stdout.on('data', async data => 
-        {
-            console.log(data)
-            var fin = await data.toString()
-            res.status(200).json(fin)
+
+        var arpPromise = new Promise((resolve, reject) => {
+            var arp = new ArpeggioGenerator(note, scale, startingString, startingOctave, "ASCENDING", "HORIZONTAL", 6, "EADGBE", "number");
+            resolve(arp.arpeggiateScale());
         })
-        python3Process.stderr.on('data', async data => 
-        {
-            console.log(await data.toString())
-            res.status(500).json({ "error": "Server Error - script error" })
-        })
+
+        await arpPromise
+        .then(result => {res.status(200).json({"result": result})})
+        .catch(error => {res.status(500).json({"error": "Server Error "})})
+
+
     }
     catch (error) 
     {
