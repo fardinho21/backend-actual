@@ -3,7 +3,8 @@
     "nodemon": "^1.14.9"
   },
   "scripts": {
-    "start:server": "nodemon server.js"
+    "start:server": "nodemon server.js &",
+    "start:proxystart":"npm run start:server"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
