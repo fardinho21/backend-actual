@@ -1,8 +1,8 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
-const { stripeFeatureService } = require("./services/stripe-feature-service.js");
+// const { stripeFeatureService } = require("./services/stripe-feature-service.js");
 const { arpGen3Service } = require("./services/arp-gen-3-service.js")
-const { userService } = require("./services/user-service.js"); // API endpoints
-const mongoose = require("mongoose"); // database
+// const { userService } = require("./services/user-service.js"); // API endpoints
+// const mongoose = require("mongoose"); // database
 // mongoose.connect("");
 const express = require("express"); // backend framework
 const app = express();
@@ -22,19 +22,19 @@ app.disable("x-powered-by")
 /////////////////////// API CODE STARTS HERE ////////////////////
 
 /////////////////// USER SERVICES ENDPOINTS START
-userService.createUserRequest(app);
-userService.logInUserRequest(app);
-userService.logOutUserRequest(app);
+// userService.createUserRequest(app);
+// userService.logInUserRequest(app);
+// userService.logOutUserRequest(app);
 /////////////////// USER SERVICES ENDPOINTS END
 
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS START
-stripeFeatureService.checkoutSession(app);
-stripeFeatureService.createProduct(app);
-stripeFeatureService.updateProduct(app);
-stripeFeatureService.createCustomer(app);
-stripeFeatureService.createPaymentCardForExistingCustomer(app);
-stripeFeatureService.createPaymentRequest(app);
-stripeFeatureService.storeNewCustomerData(app);
+// stripeFeatureService.checkoutSession(app);
+// stripeFeatureService.createProduct(app);
+// stripeFeatureService.updateProduct(app);
+// stripeFeatureService.createCustomer(app);
+// stripeFeatureService.createPaymentCardForExistingCustomer(app);
+// stripeFeatureService.createPaymentRequest(app);
+// stripeFeatureService.storeNewCustomerData(app);
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS END
 
 
