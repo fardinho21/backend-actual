@@ -1,0 +1,1 @@
+findout how to use mongoose for DB operations, kick off jwtCheckTokenStatuses(), test endpoints
