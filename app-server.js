@@ -1,8 +1,6 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
-const { mtgFeatureService } = require("./services/mtg-feature-service.js");
 const { stripeFeatureService } = require("./services/stripe-feature-service.js");
 const { shippingFeatureService } = require("./services/shipping-feature-service.js");
-const { arpGen3Service } = require("./services/arp-gen-3-service.js")
 const { userService } = require("./services/user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
@@ -45,16 +43,6 @@ shippingFeatureService.calculateCostAndTax(app);
 shippingFeatureService.createShippingLabel(app);
 shippingFeatureService.validateAddress(app);
 /////////////////// SHIPPING FEATURE SERVICE ENDPOINTS END
-
-/////////////////// MTG FEATURE SERVICES START
-mtgFeatureService.searchCardByName(app);
-// mtgFeatureService.searchSetByName(app)
-mtgFeatureService.searchSetByCode(app);
-/////////////////// MTG FEATURE SERVICES END
-
-/////////////////// ARP-GEN-3 FEATURE SERVICE ENDPOINTS END
-arpGen3Service.arpeggiateScale(app);
-/////////////////// ARP-GEN-3 FEATURE SERVICE ENDPOINTS END
 
 
 /////////////////////// API CODE ENDS HERE ////////////////////
