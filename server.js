@@ -10,10 +10,16 @@ const port = parseInt(process.env.PORT) || 8080;
 //     key: fs.readFileSync('./no-pass-key.pem'),
 //     cert: fs.readFileSync('./test-cert.pem')
 // }
-
+var jwtInterval = undefined;
 
 const onListening = () => {
     console.log("Listening on port: " , port)
+    console.log("\nServer Listening - Checking JWT statuses...")
+    if (jwtInterval === undefined)
+    {
+        jwtInterval = jwtHelper.checkForValidTokensInterval();
+    }
+
 }
 
 const onError = error => {
