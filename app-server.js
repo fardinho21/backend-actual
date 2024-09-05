@@ -1,6 +1,5 @@
 ///////////////////////////////// APPLICATION BOILERPLATE START ///////////////////////////////////////////////////// 
 const { stripeFeatureService } = require("./services/stripe-feature-service.js");
-const { shippingFeatureService } = require("./services/shipping-feature-service.js");
 const { userService } = require("./services/user-service.js"); // API endpoints
 const mongoose = require("mongoose"); // database
 // mongoose.connect("");
@@ -36,13 +35,6 @@ stripeFeatureService.createPaymentCardForExistingCustomer(app);
 stripeFeatureService.createPaymentRequest(app);
 stripeFeatureService.storeNewCustomerData(app);
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS END
-
-/////////////////// SHIPPING FEATURE SERVICE ENDPOINTS START
-shippingFeatureService.createShippingLabel(app);
-shippingFeatureService.calculateCostAndTax(app);
-shippingFeatureService.createShippingLabel(app);
-shippingFeatureService.validateAddress(app);
-/////////////////// SHIPPING FEATURE SERVICE ENDPOINTS END
 
 
 /////////////////////// API CODE ENDS HERE ////////////////////

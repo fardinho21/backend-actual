@@ -28,7 +28,7 @@ const onError = error => {
 
 const onClose = () => {
     console.log("\nServer Shutdown - SIGINT recieved\nClearing Intervals...")
-    jwtHelper.jwtClearCheckForValidTokensInterval();
+    jwtHelper.jwtClearCheckForValidTokensInterval(jwtInterval);
     process.exit()
 }
 

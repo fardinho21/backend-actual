@@ -52,29 +52,33 @@ const jwtInvalidateExpiredTokens  = () => {
     return userModel.updateMany({expires: {$lt: new Date()}}, {$set: { authentication: "invalid", expires: null }})
 };
 
-const jwtClearCheckForValidTokensInterval = () => {
-    clearInterval(checkForValidTokensInterval);
+const jwtClearCheckForValidTokensInterval = (interval) => {
+    clearInterval(interval);
 }
 
-const checkForValidTokensInterval = setInterval(() => {
-    console.log("Check for token statuses");
-    userModel.count({expires: {$lt: new Date()}})
-    .then(count => {
-        if (count > 0)
-        {
-            console.log(count)
-            jwtInvalidateExpiredTokens()
-            .then(result => {
-                console.log("result", result)
-            })
-        }
-        else 
-        {
-            console.log("No user tokens are expired.")
-        }
-    })
-
-}, 5000);
+const checkForValidTokensInterval = () =>
+{
+    return setInterval(() => {
+        console.log("Check for token statuses");
+        userModel.count({expires: {$lt: new Date()}})
+        .then(count => {
+            if (count > 0)
+            {
+                console.log(count)
+                jwtInvalidateExpiredTokens()
+                .then(result => {
+                    console.log("result", result)
+                })
+            }
+            else 
+            {
+                console.log("No user tokens are expired.")
+            }
+        })
+    
+    }, 5000);
+}
+    
 
 const jwtHelper = {
     jwtGenerateToken, 
