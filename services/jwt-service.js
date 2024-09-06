@@ -22,7 +22,7 @@ const jwtGenerateToken = (header, payload) => {
         var d = new Date();
         d.setMinutes(d.getMinutes() + 3);
         return {token:hashThis+"."+hashed, expires: d }
-    }, err => {throw new Error("Server Error - ", err)})
+    }, err => {throw new Error("Server Token Generation Error - ", err)})
 };
 
 const jwtAuthenticateToken = (token) => {
@@ -41,7 +41,7 @@ const jwtAuthenticateToken = (token) => {
 
         return authToken[2]  == hashed
 
-    }, err => {throw new Error("Server Error - ", err)});
+    }, err => {throw new Error("Server Error Token Authentication  - ", err)});
 };
 
 const jwtCheckTokenStatuses = () => {
