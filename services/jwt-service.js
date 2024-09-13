@@ -9,7 +9,7 @@ const exec = util.promisify(require('node:child_process').exec);
 const crypto = require("crypto");
 
 const jwtGenerateToken = (header, payload) => {
-    return exec("cat serverCert.pem | grep -vP '(-----.+-----)'")
+    return exec("cat certs/serverCert.pem | grep -vP '(-----.+-----)'")
     .then(data => {
         let temppayload = Buffer.from(JSON.stringify(payload)).toString('base64url')
         let tempheader = Buffer.from(JSON.stringify(header)).toString('base64url')
@@ -23,11 +23,12 @@ const jwtGenerateToken = (header, payload) => {
         d.setMinutes(d.getMinutes() + 3);
         return {token:hashThis+"."+hashed, expires: d }
     }, err => {throw new Error("Server Token Generation Error - ", err)})
+    .catch(error => {throw new Error("Server Token Generation Error - ", error)})
 };
 
 const jwtAuthenticateToken = (token) => {
 
-    return exec("cat serverCert.pem | grep -vP '(-----.+-----)'")
+    return exec("cat certs/serverCert.pem | grep -vP '(-----.+-----)'")
     .then(data => {
         const authToken = token.split(".");
         const header = authToken[0]

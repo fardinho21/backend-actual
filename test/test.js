@@ -34,9 +34,9 @@ testCase3.header=testCase1.header
 testCase3.payload=`{"dev":"Android","osv":"Tiramisu","appv":"1.0.0a", "username":${testCase3.username},"password":${testCase3.password}}`
 testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRyb2lkIiwib3N2IjoiVGlyYW1pc3UiLCJhcHB2IjoiMS4wLjBhIiwidXNlcm5hbWUiOiJnZW5lcmljVXNlcjMiLCJwYXNzd29yZCI6InBhc3N3b3JkMTQyMyJ9.0GIvcX1kMiuHDJ4NZRlTbnkcAZTruQFkkdOhZTOcjpM"`
 
-var chosenTestCase = testCase2;
+var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "login"
+var executeTest = "logout"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS
