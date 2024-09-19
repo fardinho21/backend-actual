@@ -36,7 +36,7 @@ testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRy
 
 var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "logout"
+var executeTest = "delete"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS
@@ -45,6 +45,7 @@ var curlBasePost='curl -X POST -H "Content-Type: application/json" -d'
 var createUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payload":${chosenTestCase.payload}}' ${urlBase}/create-user-request`
 var loginUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payload":${chosenTestCase.payload}}' ${urlBase}/login-user-request`
 var logoutUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/logout-user-request`
+var deleteUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/delete-user-request`
 
 
 //////////////////////////////////////////////////////
@@ -96,6 +97,28 @@ else if (executeTest == "logout")
 {
     // logoutUserUnitTest
     exec(logoutUserCurl)
+    .then(result => {
+        try 
+        {
+            var o = JSON.parse(result.stdout)
+            if (typeof o == "object" && "stdout" in o)
+                console.log(fgGreen,"LogoutUserUnitTest SUCCESS : response : \n",resetColor, o)
+            else if (typeof o == "string")
+                if (o == `Logged out` || 
+                    o == `Error handling request - Username does not exist` || 
+                    o == `Error handling request - Token invalid.`||
+                    o == "Logout failed - Invalid password")
+                {
+                    console.log(fgGreen, "LogoutUserUnitTest SUCCESS : response :", resetColor, o )
+                }
+        } catch (error) {
+            console.log(fgRed, "LogoutUserUnitTest FAILED: error : ", resetColor, error, result)
+        }
+    }, err => {console.log(err)})
+}
+else if (executeTest == "delete")
+{
+    exec(deleteUserCurl)
     .then(result => {
         try 
         {

@@ -121,7 +121,7 @@ const logInUser = (req, res) => {
         {
             jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
             .then(token => {
-                console.log(token.expires)
+                console.log("API: token expiration ",token.expires)
                 userModel.updateOne({userName: req.body.payload.username}, {authentication:token.token, expires: token.expires})
                 .then(data => {
                     res.status(200).json({authentication: token})
@@ -156,11 +156,11 @@ const logOutUserRequest = (app) => {
                     res.status(500).json("Error handling request - Username does not exist");
                 }
                 else {
-                    console.log(data[0]);
+                    console.log("API: logging out user ", data[0].userName);
                     if (data[0].authentication == req.body.authentication) 
                     {
-                        req.body.hash = data[0].passwordHash
-                        next()
+                        req.body.hash = data[0].passwordHash;
+                        next();
                     }
                     else
                     {
@@ -196,7 +196,7 @@ const logOutUser = (req, res) => {
                         res.status(200).json("Logged out")
                     }, err => {
                         console.log(err)
-                        res.status(500).json("Login Failed - Server error")
+                        res.status(500).json("Login Failed - Database error")
                     })
                 }
                 else
@@ -219,10 +219,79 @@ const logOutUser = (req, res) => {
     });
 };
 
+const deleteUserRequest = (app) =>
+{
+    app.post("/delete-user-request/", sanitizeAuthentication, (req, res, next) => {
+        const error = validationResult(req);
+        if (error.isEmpty())
+        {
+            //check exsiting dat element in database
+            userModel.find({userName:req.body.username})
+            .then(data => {
+                if (data.length == 0)
+                {
+                    res.status(500).json("Error handling request - Username does not exist");
+                }
+                else
+                {
+                    console.log("Deleting User... ", data[0].userName);
+                    if (data[0].authentication == req.body.authentication) 
+                    {
+                        req.body.hash = data[0].passwordHash;
+                        next();
+                    }
+                    else
+                    {
+                        res.status(500).json("Error handling request - Token invalid.");
+                    }
+                }
+            })
+        }
+        else 
+        {
+            console.log(error);
+            res.status(500).json("Error handling request: " + result.error[0].path + " invalid");     
+        }
+    }, deleteUser);
+};
+
+const deleteUser = (req, res) =>
+{
+    bcryptHelper.comparePassAndHash(req.body.password, req.body.hash)
+    .then(result => {
+        if (result)
+        {
+            jwtHelper.jwtAuthenticateToken(req.body.authentication)
+            .then(authenticity => {
+                if (authenticity)
+                {
+                    // the request is authentic. deletion request authorized
+                    userModel.deleteOne({userName: req.body.username})
+                    .then(data => {
+                        res.status(200).json("User Deleted...");
+                    }, err => {
+                        console.log(err)
+                        res.status(500).json("Delete Failed - Database error")
+                    })
+
+                }
+            })
+        }
+        else 
+        {
+            res.status(500).json("Error handling request - Token invalid.");
+        }
+    }, err => {
+        console.log(err);
+        res.status(500).json("Error handling request - Server Error!");
+    });
+};
+
 const userService = {
     createUserRequest, 
     logInUserRequest, 
-    logOutUserRequest
+    logOutUserRequest,
+    deleteUserRequest
 };
 
 module.exports = {userService};

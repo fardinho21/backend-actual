@@ -1,4 +1,6 @@
-Generic Command Format:    
+#########################################################
+Generic Command Format:
+#########################################################
     Any data related to the HTTP request itself should be sent using the -d flag in curl.
         - This is usecase specific data meaning it depends on what the application or endpoint is doing.
 
@@ -11,18 +13,22 @@ curl -X POST -H "Content-Type: application/json" -d '{"header":{"alg":"HS256","t
 
 curl -X POST -H "Content-Type: application/json" -d '{"header":"hello","payload":"world"}' http://localhost:8080/create-user
 curl -X POST -H "Content-Type: application/json" -d '{"data":1234}' http://localhost:8080/login-user
-
+#########################################################
 Command With Encryption:
+#########################################################
 curl --key <key.pem> --cert <path/to/cert> -X POST -H "Content-Type: application/json" -d '{"data":1234}' <url>
-
+#########################################################
 Command With JWT Authorization: 
+#########################################################
     Anything related to identity information or finances should be sent in a JWT
         - This is client specific data
 
 curl -X POST -H "Content-Type: application/json" --insecure -d '{"authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0.6Br15KPCCGuSZB5eY4LveJAwsi2EtaysyO51OhInxxY"}' http://localhost:8080/login-user
 
 curl -X POST -H "Content-Type: application/json" --insecure -d '{"authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJJUGhvbmUiLCJvc3YiOiJpT1MtMTciLCJhcHB2IjoiMS4wLjBhIn0"}' http://localhost:8080/login-user
+#########################################################
 Creating a JWT:
+#########################################################
 
 There are three parts to a JWT. Both the HEADER and PAYLOAD are encoded in Base64Url
 
@@ -53,8 +59,9 @@ SIGNATURE - Created using the encoded HEADER and PAYLOAD as well using the signi
 The package basez needs to be installed in order to use base64url encodings. Once installed use the following to encode the HEADER and PAYLOAD
 echo -n <HEADER or PAYLOAD> | base64url
 
-
+#########################################################
 Keys and Certificates
+#########################################################
     Creating a public key (certificate) from a self-signed private key
 openssl rsa -in test-key.pem -out no-pass-key.pem
     Generating a self-signed private key.

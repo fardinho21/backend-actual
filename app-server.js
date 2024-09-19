@@ -24,6 +24,7 @@ app.disable("x-powered-by")
 userService.createUserRequest(app);
 userService.logInUserRequest(app);
 userService.logOutUserRequest(app);
+userService.deleteUserRequest(app);
 /////////////////// USER SERVICES ENDPOINTS END
 
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS START
