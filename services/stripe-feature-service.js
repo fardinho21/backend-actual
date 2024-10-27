@@ -6,18 +6,24 @@ mongoose.connect("mongodb://localhost:27017/local");
 const customerModel = mongoose.model("customerData", dataBaseSchemas.CustomerSchema);
 const paymentCardModel = mongoose.model("paymentCardData", dataBaseSchemas.PaymentCardSchema);
 
-const checkoutSession = (app) =>
+const initiateCheckoutSession = (app) =>
 {
     // The request should contain a list of products chosen by the user
-    app.post("/stripe-feature-service/create-checkout-session/", (req, res) => 
+    app.post("/stripe-feature-service/create-checkout-session/", async (req, res) => 
     {
-        const session = stripe.checkout.sessions.create({
+        const session = await stripe.checkout.sessions.create({
             //TODO: refer to docs about creating and using checkout sessions
             // customer: <customer_id>
-            // line_items: [{price: <price_code>}]
+            // line_items: [{price: <price_-code>}]
             // mode: 'payment
             // expires_at: <seconds>
             //
+
+            line_items: [{price: req.body.price, quantity: req.body.quantity}],
+            customer: req.body.customerID,
+            mode: "payment",
+            success_url: ``,
+            cancel_url: ``
         })
     });
 }
@@ -126,7 +132,7 @@ const createPaymentCardForExistingCustomer = (app) =>
 }
 
 const stripeFeatureService = {
-    checkoutSession, 
+    initiateCheckoutSession, 
     storeNewCustomerData,
     createCustomer, 
     createProduct, 

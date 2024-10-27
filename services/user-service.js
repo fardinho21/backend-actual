@@ -1,7 +1,7 @@
 const { check, body, validationResult } = require("express-validator");
 const {jwtHelper} = require("./jwt-service.js");
 const {bcryptHelper} = require("./bcrypt-service.js");
-
+const {stripeFeatureService} = require("./stripe-feature-service.js");
 
 // DATA BASE SCHEMAS AND MODELS
 const mongoose = require("mongoose");
@@ -59,12 +59,17 @@ const createUserRequest = (app) => {
     }, createUser)
 };
 
+// Creates a user and a Stripe Customer
 const createUser = (req, res) => {
     var tempPayload = req.body.payload;
     tempPayload.userName = req.body.payload.username;
     bcryptHelper.generatePassHash(req.body.payload.password)
     .then(hash =>{
         tempPayload.passwordHash = hash;
+
+
+        // execute a curl command to create a customer
+
 
         userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:null})
         .then(data => {
