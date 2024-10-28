@@ -5,6 +5,7 @@ mongoose.connect("mongodb://localhost:27017/local");
 
 const customerModel = mongoose.model("customerData", dataBaseSchemas.CustomerSchema);
 const paymentCardModel = mongoose.model("paymentCardData", dataBaseSchemas.PaymentCardSchema);
+const TEST_CARD = "4242424242424242";
 
 const initiateCheckoutSession = (app) =>
 {

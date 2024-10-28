@@ -46,6 +46,7 @@ var createUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"paylo
 var loginUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payload":${chosenTestCase.payload}}' ${urlBase}/login-user-request`
 var logoutUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/logout-user-request`
 var deleteUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/delete-user-request`
+var initiateCheckoutSessionCurl = `${curlBasePost} '{"price": ${}, "authentication": ${chosenTestCase.authentication}, }'`
 
 
 //////////////////////////////////////////////////////
