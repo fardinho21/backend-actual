@@ -68,7 +68,7 @@ const createUser = (req, res) => {
         tempPayload.passwordHash = hash;
 
 
-        // execute a curl command to create a customer
+        // TODO: execute a curl command to create a customer
 
 
         userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:null})

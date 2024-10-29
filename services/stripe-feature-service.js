@@ -7,10 +7,12 @@ const customerModel = mongoose.model("customerData", dataBaseSchemas.CustomerSch
 const paymentCardModel = mongoose.model("paymentCardData", dataBaseSchemas.PaymentCardSchema);
 const TEST_CARD = "4242424242424242";
 
+
+//TODO - Implement checkout session API endpoint and Unit Test it.
 const initiateCheckoutSession = (app) =>
 {
     // The request should contain a list of products chosen by the user
-    app.post("/stripe-feature-service/create-checkout-session/", async (req, res) => 
+    app.post("/stripe-feature-service/create-checkout-session/", async (req, res, next) => 
     {
         const session = await stripe.checkout.sessions.create({
             //TODO: refer to docs about creating and using checkout sessions
@@ -26,7 +28,20 @@ const initiateCheckoutSession = (app) =>
             success_url: ``,
             cancel_url: ``
         })
-    });
+        .then(result => {
+            console.log("Checkout Result: ", result)
+            next();
+        })
+        .catch(error => 
+        {
+            console.log("Error Checkout Failed: ", error);
+        })
+    }, checkoutComplete);
+}
+
+const checkoutComplete = (req, res) =>
+{
+    res.status(200).json("Checkout Complete!");
 }
 
 const createCustomer = (app) =>

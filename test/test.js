@@ -53,13 +53,27 @@ var initiateCheckoutSessionCurl = `${curlBasePost} '{"price": ${}, "authenticati
 ////// UNIT TESTS STARTT HERE
 //////////////////////////////////////////////////////
 
+if (executeTest == "checkout")
+{
+    exec(executeTest)
+    then(result => {
+        try 
+        {
+            //TODO: detect succcess and failure.
+            //TODO: findout how to detect when a re-direct to the success_url is made
+            //TODO: findout how to detect when a re-direct to the cancel_url is made
+            
+        } catch (error) {
+            console.log("InitiateCheckoutSessionUnitTest FAILED error : ", error, result)
+        }
+    }, err => {console.log(err)})
+}
 
 if (executeTest == "create") 
 {
     // createUser Unit test
     exec(createUserCurl)
-    .then(result => {
-        
+    .then(result => {    
         try 
         {
             if (result.stdout == `"User created!"`)
