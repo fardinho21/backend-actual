@@ -59,25 +59,24 @@ const createUserRequest = (app) => {
     }, createUser)
 };
 
-// Creates a user and a Stripe Customer
-const createUser = (req, res) => {
+// Creates a user and adds it to a 
+const createUser = async (req, res) => {
     var tempPayload = req.body.payload;
     tempPayload.userName = req.body.payload.username;
-    bcryptHelper.generatePassHash(req.body.payload.password)
+    await bcryptHelper.generatePassHash(req.body.payload.password)
     .then(hash =>{
+        
         tempPayload.passwordHash = hash;
-
-
-        // TODO: execute a curl command to create a customer
-
-
+        console.log("USER_SERVICE, adding user to database: ",result)
         userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:null})
         .then(data => {
             res.status(200).json("User created!");
         }, err => {
             console.log(err)
             res.status(500).json("Error handling request - Database error")  
-        });            
+        });
+       
+                    
      }, err => {
         console.log(err)
         res.status(500).json("Error handling request - Server Error") 

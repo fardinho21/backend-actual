@@ -34,7 +34,6 @@ stripeFeatureService.updateProduct(app);
 stripeFeatureService.createCustomer(app);
 stripeFeatureService.createPaymentCardForExistingCustomer(app);
 stripeFeatureService.createPaymentRequest(app);
-stripeFeatureService.storeNewCustomerData(app);
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS END
 
 

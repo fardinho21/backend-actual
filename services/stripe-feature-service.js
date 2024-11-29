@@ -11,32 +11,35 @@ const TEST_CARD = "4242424242424242";
 //TODO - Implement checkout session API endpoint and Unit Test it.
 const initiateCheckoutSession = (app) =>
 {
+    console.log("INITIATE_CHECKOUT_SESSION API ENDPOINT CALLED")
     // The request should contain a list of products chosen by the user
-    app.post("/stripe-feature-service/create-checkout-session/", async (req, res, next) => 
+    app.post("/stripe-feature-service/create-checkout-session/",  (req, res, next) => 
     {
-        const session = await stripe.checkout.sessions.create({
-            //TODO: refer to docs about creating and using checkout sessions
-            // customer: <customer_id>
-            // line_items: [{price: <price_-code>}]
-            // mode: 'payment
-            // expires_at: <seconds>
-            //
+        console.log(req)
+        next()
+        // const session = await stripe.checkout.sessions.create({
+        //     //TODO: refer to docs about creating and using checkout sessions
+        //     // customer: <customer_id>
+        //     // line_items: [{price: <price_-code>}]
+        //     // mode: 'payment
+        //     // expires_at: <seconds>
+        //     //
 
-            line_items: [{price: req.body.price, quantity: req.body.quantity}],
-            customer: req.body.customerID,
-            mode: "payment",
-            success_url: ``,
-            cancel_url: ``
-        })
-        .then(result => {
-            console.log("Checkout Result: ", result)
-            next();
-        })
-        .catch(error => 
-        {
-            console.log("Error Checkout Failed: ", error);
-        })
-    }, checkoutComplete);
+        //     line_items: req.body.checkoutSessionData,
+        //     customer: req.body.customerID,
+        //     mode: "payment",
+        //     success_url: ``,
+        //     cancel_url: ``
+        // })
+        // .then(result => {
+        //     console.log("Checkout Result: ", result)
+        //     next();
+        // })
+        // .catch(error => 
+        // {
+        //     console.log("Error Checkout Failed: ", error);
+        // })
+    }, checkoutComplete)
 }
 
 const checkoutComplete = (req, res) =>
@@ -44,9 +47,9 @@ const checkoutComplete = (req, res) =>
     res.status(200).json("Checkout Complete!");
 }
 
-const createCustomer = (app) =>
+const createCustomer = async (app) =>
 {
-    app.post("/stripe-feature-service/create-customer/", (req, res, next) => 
+    await app.post("/stripe-feature-service/create-customer/", (req, res) => 
     {
         const customer = stripe.customers.create({
             name: req.body.name,
@@ -55,7 +58,7 @@ const createCustomer = (app) =>
             description: "new"
         }).then(result => 
         {
-            console.log("Customer: ", result.id)
+            console.log("STRIPE_FEATURE Service Creatd Customer Customer: ", result.id)
             res.locals.customerID = result.id
             next();
         }).catch(error => 
@@ -64,26 +67,6 @@ const createCustomer = (app) =>
             res.status(500).json(error)
         })
 
-    })
-}
-
-const storeNewCustomerData = (app) =>
-{
-    app.post("/stripe-feature-service/create-customer/", (req, res) => {
-        console.log("storeNewCustomerData into mongoDB", res.locals.customerID)
-        customerModel.insertMany({customerID: res.locals.customerID, customerName: "", address: "", email: ""})
-        .then(data => 
-        {
-            console.log(data)
-            res.status(200).json({
-                customerID: res.locals.customerID, 
-                mongoDB: data[0]._id
-            })
-        }).catch(error =>
-        {
-            console.log(error)
-            res.status(500).json(error)
-        });
     })
 }
 
@@ -149,7 +132,6 @@ const createPaymentCardForExistingCustomer = (app) =>
 
 const stripeFeatureService = {
     initiateCheckoutSession, 
-    storeNewCustomerData,
     createCustomer, 
     createProduct, 
     updateProduct,

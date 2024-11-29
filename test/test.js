@@ -36,7 +36,7 @@ testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRy
 
 var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "delete"
+var executeTest = "checkout"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS
@@ -46,7 +46,10 @@ var createUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"paylo
 var loginUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payload":${chosenTestCase.payload}}' ${urlBase}/login-user-request`
 var logoutUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/logout-user-request`
 var deleteUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/delete-user-request`
-var initiateCheckoutSessionCurl = `${curlBasePost} '{"price": ${}, "authentication": ${chosenTestCase.authentication}, }'`
+
+var checkoutSessionData = '"line_items": ["a", "b", "c"], "customer": "CUSTOMER_ID", "mode": "payment", "success_url": "SUCCESS_URL", "cancel_url": "CANCEL_URL"'
+
+var initiateCheckoutSessionCurl = `${curlBasePost} '{"authentication":${chosenTestCase.authentication}, ${checkoutSessionData}}' ${urlBase}/stripe-feature-service/create-checkout-session/`
 
 
 //////////////////////////////////////////////////////
@@ -55,10 +58,11 @@ var initiateCheckoutSessionCurl = `${curlBasePost} '{"price": ${}, "authenticati
 
 if (executeTest == "checkout")
 {
-    exec(executeTest)
-    then(result => {
+    exec(initiateCheckoutSessionCurl)
+    .then(result => {
         try 
         {
+            console.log("TEST_CHECKOUT_SESSION: ", result)
             //TODO: detect succcess and failure.
             //TODO: findout how to detect when a re-direct to the success_url is made
             //TODO: findout how to detect when a re-direct to the cancel_url is made
@@ -66,7 +70,7 @@ if (executeTest == "checkout")
         } catch (error) {
             console.log("InitiateCheckoutSessionUnitTest FAILED error : ", error, result)
         }
-    }, err => {console.log(err)})
+    }, err => {console.log("TEST CHECKOUT FAILED: ", err)})
 }
 
 if (executeTest == "create") 
