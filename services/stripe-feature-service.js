@@ -13,32 +13,32 @@ const initiateCheckoutSession = (app) =>
 {
     console.log("INITIATE_CHECKOUT_SESSION API ENDPOINT CALLED")
     // The request should contain a list of products chosen by the user
-    app.post("/stripe-feature-service/create-checkout-session/",  (req, res, next) => 
+    app.post("/stripe-feature-service/create-checkout-session/", async (req, res, next) => 
     {
         console.log(req)
-        next()
-        // const session = await stripe.checkout.sessions.create({
-        //     //TODO: refer to docs about creating and using checkout sessions
-        //     // customer: <customer_id>
-        //     // line_items: [{price: <price_-code>}]
-        //     // mode: 'payment
-        //     // expires_at: <seconds>
-        //     //
+        const session = await stripe.checkout.sessions.create({
+            //TODO: refer to docs about creating and using checkout sessions
+            // customer: <customer_id>
+            // line_items: [{price: <price_-code>}]
+            // mode: 'payment
+            // expires_at: <seconds>
+            //
 
-        //     line_items: req.body.checkoutSessionData,
-        //     customer: req.body.customerID,
-        //     mode: "payment",
-        //     success_url: ``,
-        //     cancel_url: ``
-        // })
-        // .then(result => {
-        //     console.log("Checkout Result: ", result)
-        //     next();
-        // })
-        // .catch(error => 
-        // {
-        //     console.log("Error Checkout Failed: ", error);
-        // })
+            line_items: req.body.checkoutSessionData,
+            customer: req.body.customerID,
+            mode: "payment",
+            success_url: ``,
+            cancel_url: ``
+        })
+        .then(result => {
+            console.log("Checkout Result: ", result)
+            next();
+        })
+        .catch(error => 
+        {
+            console.log("Error Checkout Failed: ", error);
+        })
+        next();
     }, checkoutComplete)
 }
 
@@ -88,6 +88,32 @@ const createProduct = (app) =>
             console.log(error)
             res.status(500).json(error)
         })
+    })
+}
+
+const createPrice = (app) =>
+{
+    app.post("/stripe-feature-service/create-price", async (req, res, next) => {
+
+        const price = await stripe.prices.create({
+            currency: 'usd',
+            unit_amount: 1000,
+            recurring: {
+                interval: 'month'
+            },
+            product_data: {
+                name: 'Gold Plan'
+            }
+        })
+        .then(result => 
+        {
+            console.log("Price Creation Result: ", result);
+        })
+        .catch(error => 
+        {
+            console.log("Error Price Creation Failed: ", error);
+        })
+
     })
 }
 
