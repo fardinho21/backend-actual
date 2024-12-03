@@ -161,6 +161,7 @@ const stripeFeatureService = {
     createCustomer, 
     createProduct, 
     updateProduct,
+    createPrice,
     createPaymentRequest, 
     createPaymentCardForExistingCustomer
 }
