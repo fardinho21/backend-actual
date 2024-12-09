@@ -60,70 +60,13 @@ const createCustomer = async (app) =>
         {
             console.log("STRIPE_FEATURE Service Creatd Customer Customer: ", result.id)
             res.locals.customerID = result.id
-            next();
+            res.status(200);
         }).catch(error => 
         {
             console.log(error)
             res.status(500).json(error)
         })
 
-    })
-}
-
-const createProduct = (app) =>
-{
-    app.post("/stripe-feature-service/create-product/", (req, res) =>
-    {
-        // TODO: convert list of product ids into metadata key-value pairs
-        // attention: cardList in the request body contains a list of product IDs. This list should be converted into a Stripe product metadata attribute, holding keys as cardX and values as product IDs to a specific card
-
-        var meta = req.body.cardList //cardName : quantity
-        const product = stripe.products.create({
-            name: req.body.productName,
-            metadata: meta
-        }).then(result => {
-            console.log("Product: ", result)
-            res.status(200).json(result)
-        }).catch(error => {
-            console.log(error)
-            res.status(500).json(error)
-        })
-    })
-}
-
-const createPrice = (app) =>
-{
-    app.post("/stripe-feature-service/create-price", async (req, res, next) => {
-
-        const price = await stripe.prices.create({
-            currency: 'usd',
-            unit_amount: 1000,
-            recurring: {
-                interval: 'month'
-            },
-            product_data: {
-                name: 'Gold Plan'
-            }
-        })
-        .then(result => 
-        {
-            console.log("Price Creation Result: ", result);
-        })
-        .catch(error => 
-        {
-            console.log("Error Price Creation Failed: ", error);
-        })
-
-    })
-}
-
-const updateProduct = (app) => 
-{
-    app.post("/stripe-feature-service/update-product/", (req, res) =>
-    {
-        const product = stripe.products.update({
-            // TODO: use req to fill in product name and metadata
-        })
     })
 }
 
@@ -158,10 +101,7 @@ const createPaymentCardForExistingCustomer = (app) =>
 
 const stripeFeatureService = {
     initiateCheckoutSession, 
-    createCustomer, 
-    createProduct, 
-    updateProduct,
-    createPrice,
+    createCustomer,
     createPaymentRequest, 
     createPaymentCardForExistingCustomer
 }

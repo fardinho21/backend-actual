@@ -36,7 +36,7 @@ testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRy
 
 var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "checkout"
+var executeTest = "createPrice"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS
@@ -47,9 +47,13 @@ var loginUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payloa
 var logoutUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/logout-user-request`
 var deleteUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/delete-user-request`
 
-var checkoutSessionData = '"line_items": ["a", "b", "c"], "customer": "CUSTOMER_ID", "mode": "payment", "success_url": "SUCCESS_URL", "cancel_url": "CANCEL_URL"'
+var checkoutSessionData = '"line_items": ["a", "b", "c"], "customer": "CUSTOMER_ID", "mode": "payment", "success_url": "SUCCESS_URL", "cancel_url": "CANCEL_URL"';
+
+var priceCreationData = '"currency": "usd", "unit_amount": 1000, "recurring" : {"interval":"month"}, "product_data" : {"name":"Gold Plan"}';
 
 var initiateCheckoutSessionCurl = `${curlBasePost} '{"authentication":${chosenTestCase.authentication}, ${checkoutSessionData}}' ${urlBase}/stripe-feature-service/create-checkout-session/`
+
+var createPriceCurl = `${curlBasePost} "{"currency":"usd"}" ${urlBase}/string-feature-service/create-price`
 
 
 //////////////////////////////////////////////////////
@@ -71,6 +75,19 @@ if (executeTest == "checkout")
             console.log("InitiateCheckoutSessionUnitTest FAILED error : ", error, result)
         }
     }, err => {console.log("TEST CHECKOUT FAILED: ", err)})
+}
+
+if (executeTest == "createPrice")
+{
+    exec(createPriceCurl)
+    .then(result => {
+        try
+        {
+            console.log(result)
+        } catch (error) {
+            console.log("CreatePriceUnitTest FAILED error : ", error, result)
+        }
+    }, err => {console.log("TEST PRICE CREATION FAILED: ", err)})
 }
 
 if (executeTest == "create") 
