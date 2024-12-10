@@ -13,33 +13,26 @@ const initiateCheckoutSession = (app) =>
 {
     console.log("INITIATE_CHECKOUT_SESSION API ENDPOINT CALLED")
     // The request should contain a list of products chosen by the user
-    app.post("/stripe-feature-service/create-checkout-session/", async (req, res, next) => 
+    app.post("/stripe-feature-service/create-checkout-session/", async (req, res) => 
     {
-        console.log(req)
+        // console.log(req.body)
         const session = await stripe.checkout.sessions.create({
-            //TODO: refer to docs about creating and using checkout sessions
-            // customer: <customer_id>
-            // line_items: [{price: <price_-code>}]
-            // mode: 'payment
-            // expires_at: <seconds>
-            //
-
-            line_items: req.body.checkoutSessionData,
+            line_items: req.body.line_items,
             customer: req.body.customerID,
-            mode: "payment",
-            success_url: ``,
-            cancel_url: ``
+            mode: "subscription",
+            success_url: "https://www.google.com",
+            cancel_url: "https://bing.com"
         })
         .then(result => {
             console.log("Checkout Result: ", result)
-            next();
+            res.status(200).json(result);
         })
         .catch(error => 
         {
             console.log("Error Checkout Failed: ", error);
+            res.status(500).json(error);
         })
-        next();
-    }, checkoutComplete)
+    })
 }
 
 const checkoutComplete = (req, res) =>
