@@ -14,7 +14,10 @@ const brightColor = "\x1b[1m"
 const fgRed = "\x1b[31m"
 const fgGreen = "\x1b[32m"
 
-////// TEST USERS
+//////////////////////////////////////////////////////
+////// TEST CASE DATA
+//////////////////////////////////////////////////////
+
 var testCase1 = {}
 testCase1.username='"genericUser1"'
 testCase1.password='"password1234!"'
@@ -39,7 +42,7 @@ console.log("chosen Test", chosenTestCase)
 var executeTest = "checkout"
 
 //////////////////////////////////////////////////////
-////// CURL COMMANDS
+////// CURL COMMANDS BASE
 //////////////////////////////////////////////////////
 var curlBasePost='curl -X POST -H "Content-Type: application/json" -d'
 var createUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payload":${chosenTestCase.payload}}' ${urlBase}/create-user-request`
@@ -47,13 +50,22 @@ var loginUserCurl = `${curlBasePost} '{"header":${chosenTestCase.header},"payloa
 var logoutUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/logout-user-request`
 var deleteUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "password":${chosenTestCase.password}, "authentication":${chosenTestCase.authentication}}' ${urlBase}/delete-user-request`
 
-// VALID checkout session data
-// 
-var checkoutSessionData = '"line_items": [{"price":"price_1QUIkmDXPJlr8jYiLMA6eY4D", "quantity":2}], "customer": "CUSTOMER_ID", "mode": "subscription"';
+//////////////////////////////////////////////////////
+////// REQUEST DATA
+//////////////////////////////////////////////////////
 
+// VALID checkout session data for subscriptions
+var checkoutSessionDataSub = '"line_items": [{"price":"price_1QUIkmDXPJlr8jYiLMA6eY4D", "quantity":2}], "customer": "CUSTOMER_ID", "mode": "subscription"';
+
+// TODO checkout session data for one time payments
+var checkoutSessionDataSingle = '"line_items": [{"price":"price_1QUIkmDXPJlr8jYiLMA6eY4D", "quantity":2}], "customer": "CUSTOMER_ID", "mode": "subscription"';
 var priceCreationData = '"currency": "usd", "unit_amount": 1000, "recurring" : {"interval":"month"}, "product_data" : {"name":"Gold Plan"}';
 
-var initiateCheckoutSessionCurl = `${curlBasePost} '{"authentication":${chosenTestCase.authentication}, ${checkoutSessionData}}' ${urlBase}/stripe-feature-service/create-checkout-session/`
+//////////////////////////////////////////////////////
+////// CURL COMMANDS W/ DATA
+//////////////////////////////////////////////////////
+
+var initiateCheckoutSessionCurl = `${curlBasePost} '{"authentication":${chosenTestCase.authentication}, ${checkoutSessionDataSub}}' ${urlBase}/stripe-feature-service/create-checkout-session/`
 
 var createPriceCurl = `${curlBasePost} "{"currency":"usd"}" ${urlBase}/string-feature-service/create-price`
 
@@ -61,13 +73,18 @@ var createPriceCurl = `${curlBasePost} "{"currency":"usd"}" ${urlBase}/string-fe
 ////// UNIT TESTS STARTT HERE
 //////////////////////////////////////////////////////
 
+if (executeTest == "addPaymentMethod")
+{
+    //TODO
+}
+
 if (executeTest == "checkout")
 {
     exec(initiateCheckoutSessionCurl)
     .then(result => {
         try 
         {
-            console.log("TEST_CHECKOUT_SESSION: ", result)
+            console.log("TEST_CHECKOUT_SESSION: ", result.stdout)
             //TODO: detect succcess and failure.
             //TODO: findout how to detect when a re-direct to the success_url is made
             //TODO: findout how to detect when a re-direct to the cancel_url is made
@@ -165,7 +182,3 @@ else if (executeTest == "delete")
         }
     }, err => {console.log(err)})
 }
-
-
-
-// AUTHENTICATION IS STILL INVALID AFTER LOGGING IN

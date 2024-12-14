@@ -9,7 +9,7 @@ const TEST_CARD = "4242424242424242";
 
 
 //TODO - Implement checkout session API endpoint and Unit Test it.
-const initiateCheckoutSession = (app) =>
+const initiateCheckoutSessionSub = (app) =>
 {
     console.log("INITIATE_CHECKOUT_SESSION API ENDPOINT CALLED")
     // The request should contain a list of products chosen by the user
@@ -33,11 +33,6 @@ const initiateCheckoutSession = (app) =>
             res.status(500).json(error);
         })
     })
-}
-
-const checkoutComplete = (req, res) =>
-{
-    res.status(200).json("Checkout Complete!");
 }
 
 const createCustomer = async (app) =>
@@ -93,7 +88,7 @@ const createPaymentCardForExistingCustomer = (app) =>
 }
 
 const stripeFeatureService = {
-    initiateCheckoutSession, 
+    initiateCheckoutSessionSub, 
     createCustomer,
     createPaymentRequest, 
     createPaymentCardForExistingCustomer
