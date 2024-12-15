@@ -67,7 +67,7 @@ const createUser = async (req, res) => {
     .then(hash =>{
         
         tempPayload.passwordHash = hash;
-        console.log("USER_SERVICE, adding user to database: ",result)
+        console.log("USER_SERVICE, adding user to database: ", hash)
         userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:null})
         .then(data => {
             res.status(200).json("User created!");

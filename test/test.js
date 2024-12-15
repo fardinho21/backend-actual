@@ -39,7 +39,7 @@ testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRy
 
 var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "checkout"
+var executeTest = "create"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS BASE
@@ -69,9 +69,16 @@ var initiateCheckoutSessionCurl = `${curlBasePost} '{"authentication":${chosenTe
 
 var createPriceCurl = `${curlBasePost} "{"currency":"usd"}" ${urlBase}/string-feature-service/create-price`
 
+var createStripeCustomer = `${curlBasePost} '{}'` // TODO
+
 //////////////////////////////////////////////////////
 ////// UNIT TESTS STARTT HERE
 //////////////////////////////////////////////////////
+
+if (executeTest == "createStripeCustomer")
+{
+    //TODO
+}
 
 if (executeTest == "addPaymentMethod")
 {
@@ -95,7 +102,7 @@ if (executeTest == "checkout")
     }, err => {console.log("TEST CHECKOUT FAILED: ", err)})
 }
 
-if (executeTest == "create") 
+if (executeTest == "createUser") 
 {
     // createUser Unit test
     exec(createUserCurl)

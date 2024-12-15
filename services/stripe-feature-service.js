@@ -37,9 +37,9 @@ const initiateCheckoutSessionSub = (app) =>
 
 const createCustomer = async (app) =>
 {
-    await app.post("/stripe-feature-service/create-customer/", (req, res) => 
+    await app.post("/stripe-feature-service/create-customer/", async (req, res) => 
     {
-        const customer = stripe.customers.create({
+        const customer = await stripe.customers.create({
             name: req.body.name,
             email: req.body.email,
             address: req.body.address,
