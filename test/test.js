@@ -7,6 +7,7 @@ const exec = util.promisify(require('child_process').exec);
 ////////////////////////////////////////////////
 
 const urlBase = "http://localhost:8080"
+const sk_test = "sk_test_51M0qRCDXPJlr8jYiuJSnkv6EGDgxcfYAVrjpCQwbALQGBW0Nm8DGI8YAO8RyFRB3nVWtgzR4HJ5o2eNeEvH7Ec9Y00tabnrPFs:"
 
 ////// COLORS
 const resetColor = "\x1b[0m"
@@ -39,7 +40,7 @@ testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRy
 
 var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "create"
+var executeTest = "createStripeCustomer"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS BASE
@@ -58,6 +59,7 @@ var deleteUserCurl = `${curlBasePost} '{"username":${chosenTestCase.username}, "
 var checkoutSessionDataSub = '"line_items": [{"price":"price_1QUIkmDXPJlr8jYiLMA6eY4D", "quantity":2}], "customer": "CUSTOMER_ID", "mode": "subscription"';
 
 // TODO checkout session data for one time payments
+// TODO new customer creation data
 var checkoutSessionDataSingle = '"line_items": [{"price":"price_1QUIkmDXPJlr8jYiLMA6eY4D", "quantity":2}], "customer": "CUSTOMER_ID", "mode": "subscription"';
 var priceCreationData = '"currency": "usd", "unit_amount": 1000, "recurring" : {"interval":"month"}, "product_data" : {"name":"Gold Plan"}';
 
@@ -69,7 +71,7 @@ var initiateCheckoutSessionCurl = `${curlBasePost} '{"authentication":${chosenTe
 
 var createPriceCurl = `${curlBasePost} "{"currency":"usd"}" ${urlBase}/string-feature-service/create-price`
 
-var createStripeCustomer = `${curlBasePost} '{}'` // TODO
+var createStripeCustomerCurl = `curl -X POST -H "Content-Type:application/json" ${urlBase}/stripe-feature-service/create-customer/ -u ${sk_test} -d '{"name":"Poop Face","email":"poopface@example.com"}'`
 
 //////////////////////////////////////////////////////
 ////// UNIT TESTS STARTT HERE
@@ -77,15 +79,24 @@ var createStripeCustomer = `${curlBasePost} '{}'` // TODO
 
 if (executeTest == "createStripeCustomer")
 {
-    //TODO
+    exec(createStripeCustomerCurl)
+    .then(result => {
+        try 
+        {
+            console.log("TEST_CREATE_STRIPE_CUSTOMER: ", result.stdout)
+            
+        } catch (error) {
+            console.log("TEST_CREATE_STRIPE_CUSTOMER_FAILED error: ", error, result)
+        }
+    }, err => {console.log("CURL_ERROR: ", err)})
 }
 
-if (executeTest == "addPaymentMethod")
+else if (executeTest == "addPaymentMethod")
 {
     //TODO
 }
 
-if (executeTest == "checkout")
+else if (executeTest == "checkout")
 {
     exec(initiateCheckoutSessionCurl)
     .then(result => {
@@ -102,7 +113,7 @@ if (executeTest == "checkout")
     }, err => {console.log("TEST CHECKOUT FAILED: ", err)})
 }
 
-if (executeTest == "createUser") 
+else if (executeTest == "createUser") 
 {
     // createUser Unit test
     exec(createUserCurl)

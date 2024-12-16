@@ -39,16 +39,18 @@ const createCustomer = async (app) =>
 {
     await app.post("/stripe-feature-service/create-customer/", async (req, res) => 
     {
+
+        // console.log("CREATE_STRIPE_CUSTOMER: ",req.body)
+        // res.status(200).json("Test")
         const customer = await stripe.customers.create({
             name: req.body.name,
             email: req.body.email,
-            address: req.body.address,
             description: "new"
         }).then(result => 
         {
-            console.log("STRIPE_FEATURE Service Creatd Customer Customer: ", result.id)
+            console.log("STRIPE_FEATURE_SERVICE: Created Customer: ", result.id)
             res.locals.customerID = result.id
-            res.status(200);
+            res.status(200).json({"id":result.id});
         }).catch(error => 
         {
             console.log(error)
