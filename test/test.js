@@ -40,7 +40,7 @@ testCase3.authentication=`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJBbmRy
 
 var chosenTestCase = testCase1;
 console.log("chosen Test", chosenTestCase)
-var executeTest = "createStripeCustomer"
+var executeTest = "addPaymentMethod"
 
 //////////////////////////////////////////////////////
 ////// CURL COMMANDS BASE
@@ -73,6 +73,9 @@ var createPriceCurl = `${curlBasePost} "{"currency":"usd"}" ${urlBase}/string-fe
 
 var createStripeCustomerCurl = `curl -X POST -H "Content-Type:application/json" ${urlBase}/stripe-feature-service/create-customer/ -u ${sk_test} -d '{"name":"Poop Face","email":"poopface@example.com"}'`
 
+var createStripeCard = `curl -X POST -H "Content-Type:application/json" ${urlBase}/stripe-feature-service/create-payment-card/ \
+-u ${sk_test} \ -d '{"source":{"exp_month":12,"exp_year":2040,"number":4242424242424242,"object":"card","name":"Poop Face", "metadata":{"customerID":"cus_RRVaxq5kI1RJ56"}}}'`
+
 //////////////////////////////////////////////////////
 ////// UNIT TESTS STARTT HERE
 //////////////////////////////////////////////////////
@@ -83,8 +86,7 @@ if (executeTest == "createStripeCustomer")
     .then(result => {
         try 
         {
-            console.log("TEST_CREATE_STRIPE_CUSTOMER: ", result.stdout)
-            
+            console.log("TEST_CREATE_STRIPE_CUSTOMER: ", result.stdout)           
         } catch (error) {
             console.log("TEST_CREATE_STRIPE_CUSTOMER_FAILED error: ", error, result)
         }
@@ -93,7 +95,18 @@ if (executeTest == "createStripeCustomer")
 
 else if (executeTest == "addPaymentMethod")
 {
-    //TODO
+
+    //TODO create token from card information
+    exec(createStripeCard)
+    .then(result => {
+        try
+        {
+            console.log("TEST_CREATE_STRIPE_PAYMENT_CARD: ", result.stdout);
+        } catch(error)
+        {
+            console.log("TEST_CREATE_STRIPE_PAYMENT_CARD_FAILED error: ", error)
+        }
+    }, err => {console.log("CURL_ERROR: ", err)})
 }
 
 else if (executeTest == "checkout")

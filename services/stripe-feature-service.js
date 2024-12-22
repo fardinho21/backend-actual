@@ -73,19 +73,24 @@ const createPaymentRequest = (app) =>
 // TODO - create the card and add it to the customer 
 const createPaymentCardForExistingCustomer = (app) =>
 {
-    app.post("/stripe-feature-service/create-payment-card/", (req, res, next) => 
+    app.post("/stripe-feature-service/create-payment-card/", async (req, res) => 
     {
-        console.log(req.body.customerID)
-        stripe.customers.retrieve(req.body.customerID)
-        .then(customer => 
-        {
-            // stripe.customers.createSource(req.body.customerID, {source: })
-            console.log(customer)
-            res.status(200).json("Hello World")
-        }).catch(error => 
-        {
-            res.status(500).json(error)
-        })
+        console.log(req.body)
+        // TODO create token from card information
+
+        const customerSource = await stripe.customers.createSource(
+            req.body.source.metadata.customerID,
+            {
+              source: req.body.source
+            }).then(result => 
+            {
+                console.log("STRIPE_FEATURE_SERVICE: Created Payment Card: ", result.id)
+                res.status(200).json("SUCCESS");
+            }).catch(error => 
+            {
+                console.log(error)
+                res.status(500).json(error)
+            })
     })
 }
 
