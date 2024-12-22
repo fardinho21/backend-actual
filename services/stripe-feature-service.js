@@ -73,7 +73,6 @@ const createPaymentIntent = (app) =>
             
         })
         .then(result => {
-            console.log(result)
             res.status(200).json({clientSecret: result.client_secret})
         })
         .catch(error => res.status(500).json(error));

@@ -7,7 +7,7 @@ import {Elements} from "@stripe/react-stripe-js";
 import {
   BrowserRouter as Router,
   Routes,
-  Route
+  Route,
 } from "react-router-dom";
 
 import CheckoutForm from "./CheckoutForm"
@@ -16,8 +16,8 @@ import CompletePage from "./CompletePage"
 const stripePromise = loadStripe("pk_test_51M0qRCDXPJlr8jYiVDeeC3uxrYeRjLFZxMIWd7N9VLutTtIyzKIBtVy0I6K5KesiSQYMIKBASmgCBCf92ZUUpAzz00jiuU98pa")
 
 export default function App() {
-
   const [clientSecret, setClientSecret] = useState("")
+  const [checkoutComplete, setCheckoutComplete] = useState(false)
   useEffect(() => {
     console.log("CLIENT_CREATE_PAYMENT_INTENT")
     fetch("http://localhost:8080/stripe-feature-service/create-payment-intent/", {
@@ -27,7 +27,7 @@ export default function App() {
     })
     .then(res => res.json())
     .then(data => {
-      console.log("DATA:",data)
+      console.log("DATA:",data.clientSecret)
       setClientSecret(data.clientSecret)
     })
     .catch(error => console.log(error))
@@ -40,16 +40,24 @@ export default function App() {
   const loader = 'auto';
   
   return (
-    <Router>
-      <div className="App">
+    <>
+      {clientSecret && <div className="App">
         <Elements options={{clientSecret, appearance, loader}} stripe={stripePromise}>
-          <Routes>
-            <Route path="/checkout" element={<CheckoutForm/>}/>
-            <Route path="/complete" element={<CompletePage/>}/>
-          </Routes>
+            <CheckoutForm/>
+            
         </Elements>
-      </div>
-    </Router>
+      </div>}
+      {checkoutComplete &&   
+      <div className="App">
+        <CompletePage/>
+      </div>}
+      {!clientSecret && 
+      <div className="App">
+        Hello From App
+      </div>}
+
+    </>
+
   );
 }
 
