@@ -4,6 +4,7 @@ import './App.css';
 import React, {useState, useEffect} from "react";
 import {loadStripe} from "@stripe/stripe-js";
 import {Elements} from "@stripe/react-stripe-js";
+
 import {
   BrowserRouter as Router,
   Routes,

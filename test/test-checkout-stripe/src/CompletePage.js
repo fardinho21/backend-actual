@@ -54,7 +54,7 @@ export default function CompletePage() {
     if (!stripe) {
       return;
     }
-
+    // TODO set url search params for client secret before displaying the checkout page
     const clientSecret = new URLSearchParams(window.location.search).get(
       "payment_intent_client_secret"
     );
@@ -63,13 +63,18 @@ export default function CompletePage() {
       return;
     }
 
-    stripe.retrievePaymentIntent(clientSecret).then(({paymentIntent}) => {
+    stripe.retrievePaymentIntent(clientSecret)
+    .then(({paymentIntent}) => {
       if (!paymentIntent) {
         return;
       }
+      console.log("CLIENT_COMPLETE_PAGE: ", paymentIntent)
 
       setStatus(paymentIntent.status);
       setIntentId(paymentIntent.id);
+    })
+    .catch(error => {
+        console.log("CLIENT_COMPLETE_PAGE_ERROR: ", error)
     });
   }, [stripe]);
 
