@@ -41,15 +41,15 @@ export default function App() {
   
   return (
     <>
+      {checkoutComplete &&   
+      <div className="App">
+        <CompletePage/>
+      </div>}
       {clientSecret && <div className="App">
         <Elements options={{clientSecret, appearance, loader}} stripe={stripePromise}>
             <CheckoutForm/>
             
         </Elements>
-      </div>}
-      {checkoutComplete &&   
-      <div className="App">
-        <CompletePage/>
       </div>}
       {!clientSecret && 
       <div className="App">
