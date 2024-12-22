@@ -95,7 +95,6 @@ if (executeTest == "createStripeCustomer")
 
 else if (executeTest == "addPaymentMethod")
 {
-
     //TODO create token from card information
     exec(createStripeCard)
     .then(result => {

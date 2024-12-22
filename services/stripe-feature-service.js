@@ -60,45 +60,33 @@ const createCustomer = async (app) =>
     })
 }
 
-const createPaymentRequest = (app) =>
+const createPaymentIntent = (app) =>
 {
-    app.post("/stripe-feature-service/create-payment-request/", (req, res) =>
+    app.post("/stripe-feature-service/create-payment-intent/", async (req, res) =>
     {
-        const paymentRequest = stripe.paymentRequest({/*TODO fillout request*/});
+        console.log("SERVER_CREATE_PAYMENT_INTENT")
+        const paymentIntent = await stripe.paymentIntents.create({
+
+            amount: 1000,
+            currency: "usd",
+            automatic_payment_methods: {enabled:false},
+            
+        })
+        .then(result => {
+            console.log(result)
+            res.status(200).json({clientSecret: result.client_secret})
+        })
+        .catch(error => res.status(500).json(error));
+
+        
     })
 }
 
-// TODO - add payment card details to stripe-curl-command.txt for the corresponding curl command
-// TODO - investigate if stripe.createToken is needed for this endpoint
-// TODO - create the card and add it to the customer 
-const createPaymentCardForExistingCustomer = (app) =>
-{
-    app.post("/stripe-feature-service/create-payment-card/", async (req, res) => 
-    {
-        console.log(req.body)
-        // TODO create token from card information
-
-        const customerSource = await stripe.customers.createSource(
-            req.body.source.metadata.customerID,
-            {
-              source: req.body.source
-            }).then(result => 
-            {
-                console.log("STRIPE_FEATURE_SERVICE: Created Payment Card: ", result.id)
-                res.status(200).json("SUCCESS");
-            }).catch(error => 
-            {
-                console.log(error)
-                res.status(500).json(error)
-            })
-    })
-}
 
 const stripeFeatureService = {
     initiateCheckoutSessionSub, 
     createCustomer,
-    createPaymentRequest, 
-    createPaymentCardForExistingCustomer
+    createPaymentIntent, 
 }
 
 module.exports = {stripeFeatureService}

@@ -1,0 +1,55 @@
+import logo from './logo.svg';
+import './App.css';
+
+import React, {useState, useEffect} from "react";
+import {loadStripe} from "@stripe/stripe-js";
+import {Elements} from "@stripe/react-stripe-js";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
+
+import CheckoutForm from "./CheckoutForm"
+import CompletePage from "./CompletePage"
+
+const stripePromise = loadStripe("pk_test_51M0qRCDXPJlr8jYiVDeeC3uxrYeRjLFZxMIWd7N9VLutTtIyzKIBtVy0I6K5KesiSQYMIKBASmgCBCf92ZUUpAzz00jiuU98pa")
+
+export default function App() {
+
+  const [clientSecret, setClientSecret] = useState("")
+  useEffect(() => {
+    console.log("CLIENT_CREATE_PAYMENT_INTENT")
+    fetch("http://localhost:8080/stripe-feature-service/create-payment-intent/", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({test:"TEST_ITEM"})
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("DATA:",data)
+      setClientSecret(data.clientSecret)
+    })
+    .catch(error => console.log(error))
+  }, []);
+
+  const appearance = {
+    theme: 'stripe'
+  }
+  
+  const loader = 'auto';
+  
+  return (
+    <Router>
+      <div className="App">
+        <Elements options={{clientSecret, appearance, loader}} stripe={stripePromise}>
+          <Routes>
+            <Route path="/checkout" element={<CheckoutForm/>}/>
+            <Route path="/complete" element={<CompletePage/>}/>
+          </Routes>
+        </Elements>
+      </div>
+    </Router>
+  );
+}
+

@@ -15,10 +15,10 @@ var jwtInterval = undefined;
 const onListening = () => {
     console.log("Listening on port: " , port)
     console.log("\nServer Listening - Checking JWT statuses...")
-    if (jwtInterval === undefined)
-    {
-        jwtInterval = jwtHelper.checkForValidTokensInterval();
-    }
+    // if (jwtInterval === undefined)
+    // {
+    //     jwtInterval = jwtHelper.checkForValidTokensInterval();
+    // }
 
 }
 

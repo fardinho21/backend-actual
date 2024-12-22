@@ -75,6 +75,8 @@ const checkForValidTokensInterval = () =>
             {
                 console.log("No user tokens are expired.")
             }
+        }).catch(err => {
+            console.log("DATABASE_ERROR: ", err)
         })
     
     }, 5000);

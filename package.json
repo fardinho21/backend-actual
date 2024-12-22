@@ -10,9 +10,11 @@
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
+    "jsx": "^0.9.89",
     "mongoose": "^7.8.3",
     "nodemailer": "^6.9.16",
     "prompt-sync": "^4.2.0",
+    "react": "^19.0.0",
     "stripe": "^12.18.0"
   }
 }
