@@ -27,7 +27,8 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
+        // TODO: Make sure to change this to your payment completion page
+        // TODO: Incorporate React Router.
         return_url: "http://localhost:3000/complete",
       },
     });
