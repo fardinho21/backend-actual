@@ -1,9 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, {useState, useEffect} from "react";
-import {loadStripe} from "@stripe/stripe-js";
-import {Elements} from "@stripe/react-stripe-js";
+import React, { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 import {
   BrowserRouter as Router,
@@ -23,39 +23,38 @@ export default function App() {
     console.log("CLIENT_CREATE_PAYMENT_INTENT")
     fetch("http://localhost:8080/stripe-feature-service/create-payment-intent/", {
       method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({test:"TEST_ITEM"})
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ test: "TEST_ITEM" })
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log("DATA:",data.clientSecret)
-      setClientSecret(data.clientSecret)
-    })
-    .catch(error => console.log(error))
+      .then(res => res.json())
+      .then(data => {
+        console.log("DATA:", data.clientSecret)
+        setClientSecret(data.clientSecret)
+      })
+      .catch(error => console.log(error))
   }, []);
 
   const appearance = {
     theme: 'stripe'
   }
-  
+
   const loader = 'auto';
-  
+
   return (
     <>
-      {checkoutComplete &&   
-      <div className="App">
-        <CompletePage/>
-      </div>}
+      {checkoutComplete &&
+        <div className="App">
+          <CompletePage />
+        </div>}
       {clientSecret && <div className="App">
-        <Elements options={{clientSecret, appearance, loader}} stripe={stripePromise}>
-            <CheckoutForm/>
-            
+        <Elements options={{ clientSecret, appearance, loader }} stripe={stripePromise}>
+          <CheckoutForm />
         </Elements>
       </div>}
-      {!clientSecret && 
-      <div className="App">
-        Hello From App
-      </div>}
+      {!clientSecret &&
+        <div className="App">
+          Hello From App
+        </div>}
 
     </>
 
