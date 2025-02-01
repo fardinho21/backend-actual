@@ -13,50 +13,49 @@ import {
 
 import CheckoutForm from "./CheckoutForm"
 import CompletePage from "./CompletePage"
+import ProductsPage from './ProductsPage'
+import CancelPage from './CancelPage'
 
 const stripePromise = loadStripe("pk_test_51M0qRCDXPJlr8jYiVDeeC3uxrYeRjLFZxMIWd7N9VLutTtIyzKIBtVy0I6K5KesiSQYMIKBASmgCBCf92ZUUpAzz00jiuU98pa")
 
-export default function App() {
-  const [clientSecret, setClientSecret] = useState("")
-  const [checkoutComplete, setCheckoutComplete] = useState(false)
-  useEffect(() => {
-    console.log("CLIENT_CREATE_PAYMENT_INTENT")
-    fetch("http://localhost:8080/stripe-feature-service/create-payment-intent/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ test: "TEST_ITEM" })
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log("DATA:", data.clientSecret)
-        setClientSecret(data.clientSecret)
-      })
-      .catch(error => console.log(error))
-  }, []);
+const Pages =
+{
+  PRODUCTS_PAGE_INDEX: 0,
+  COMPLETE_PAGE_INDEX: 1,
+  CANCEL_PAGE_INDEX: 2
+}
 
-  const appearance = {
-    theme: 'stripe'
+export default function App() {
+
+  const [pageIndex, setPageIndex] = useState(Pages.PRODUCTS_PAGE_INDEX);
+
+  const query = new URLSearchParams(window.location.search)
+
+  if (query.get("checkout-complete")) {
+    setPageIndex(Pages.COMPLETE_PAGE_INDEX)
+
+  }
+  if (query.get("cancel-checkout")) {
+    setPageIndex(Pages.CANCEL_PAGE_INDEX)
   }
 
-  const loader = 'auto';
+  const productThatWasSelectedEventHandler = (event) => {
+    console.log(event.target.innerText.split(":")[1].trim())
+  }
 
   return (
-    <>
-      {checkoutComplete &&
-        <div className="App">
-          <CompletePage />
-        </div>}
-      {clientSecret && <div className="App">
-        <Elements options={{ clientSecret, appearance, loader }} stripe={stripePromise}>
-          <CheckoutForm />
-        </Elements>
-      </div>}
-      {!clientSecret &&
-        <div className="App">
-          Hello From App
-        </div>}
+    <div className="App">
 
-    </>
+      {pageIndex == Pages.PRODUCTS_PAGE_INDEX &&
+        <ProductsPage selectedProduct={productThatWasSelectedEventHandler}></ProductsPage>
+      }
+      {pageIndex == Pages.COMPLETE_PAGE_INDEX &&
+        <CompletePage></CompletePage>
+      }
+      {pageIndex == Pages.CANCEL_PAGE_INDEX &&
+        <CancelPage></CancelPage>
+      }
+    </div>
 
   );
 }
