@@ -28,6 +28,7 @@ const Pages =
 export default function App() {
 
   const [pageIndex, setPageIndex] = useState(Pages.PRODUCTS_PAGE_INDEX);
+  const [displayCart, toggleCartDisplay] = useState(false);
 
   const query = new URLSearchParams(window.location.search)
 
@@ -43,18 +44,45 @@ export default function App() {
     console.log(event.target.innerText.split(":")[1].trim())
   }
 
+  const onCartButtonClick = (event) => {
+    if (displayCart) {
+      toggleCartDisplay(false);
+    }
+    else {
+      toggleCartDisplay(true);
+    }
+    console.log(displayCart)
+  }
+
   return (
     <div className="App">
 
-      {pageIndex == Pages.PRODUCTS_PAGE_INDEX &&
-        <ProductsPage selectedProduct={productThatWasSelectedEventHandler}></ProductsPage>
-      }
-      {pageIndex == Pages.COMPLETE_PAGE_INDEX &&
-        <CompletePage></CompletePage>
-      }
-      {pageIndex == Pages.CANCEL_PAGE_INDEX &&
-        <CancelPage></CancelPage>
-      }
+
+      <div className="main">
+
+        <div className="topBar">
+          <button onClick={onCartButtonClick}>|||</button>
+        </div>
+
+        <div className="contents">
+          {pageIndex == Pages.PRODUCTS_PAGE_INDEX &&
+            <ProductsPage selectedProduct={productThatWasSelectedEventHandler}></ProductsPage>
+          }
+          {pageIndex == Pages.COMPLETE_PAGE_INDEX &&
+            <CompletePage></CompletePage>
+          }
+          {pageIndex == Pages.CANCEL_PAGE_INDEX &&
+            <CancelPage></CancelPage>
+          }
+        </div>
+
+      </div>
+
+
+      <div className="shoppingCart" style={displayCart ? { width: "20%" } : { width: "0%" }}>
+        
+      </div>
+
     </div>
 
   );

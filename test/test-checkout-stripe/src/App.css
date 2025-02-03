@@ -1,8 +1,46 @@
-.App
-{
-  border: 2px solid red;
+.App {
   height: 100vh;
-  width: 50%;
-  margin:auto;
+  display: flex;
+  flex-direction: row;
+  border: solid 4px blue;
 }
 
+.contents {
+  height: 100%;
+}
+
+.shoppingCart {
+  height: 100%;
+  background-color: grey;
+  transition: 0.5s;
+
+}
+
+.main {
+  height: 100%;
+  width: 50%;
+  margin: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border: solid 4px green;
+}
+
+.topBar {
+  background-color: gainsboro;
+  width: 100%;
+  padding: 1rem;
+}
+
+.topBar button {
+  background-color: sandybrown;
+  transform: rotate(90deg);
+  float: right;
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-weight: bolder;
+}
+
+.topBar button:hover {
+  cursor: pointer;
+}
