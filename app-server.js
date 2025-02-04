@@ -28,7 +28,7 @@ userService.deleteUserRequest(app);
 /////////////////// USER SERVICES ENDPOINTS END
 
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS START
-stripeFeatureService.initiateCheckoutSessionSub(app);
+stripeFeatureService.initiateCheckoutSessionPayment(app);
 stripeFeatureService.createCustomer(app);
 stripeFeatureService.createPaymentIntent(app);
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS END
