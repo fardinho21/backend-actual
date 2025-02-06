@@ -7,7 +7,7 @@ const express = require("express"); // backend framework
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -21,20 +21,20 @@ app.disable("x-powered-by")
 /////////////////////// API CODE STARTS HERE ////////////////////
 
 /////////////////// USER SERVICES ENDPOINTS START
-userService.createUserRequest(app);
-userService.logInUserRequest(app);
-userService.logOutUserRequest(app);
-userService.deleteUserRequest(app);
+// userService.createUserRequest(app);
+// userService.logInUserRequest(app);
+// userService.logOutUserRequest(app);
+// userService.deleteUserRequest(app);
 /////////////////// USER SERVICES ENDPOINTS END
 
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS START
 stripeFeatureService.initiateCheckoutSessionPayment(app);
 stripeFeatureService.createCustomer(app);
-stripeFeatureService.createPaymentIntent(app);
+stripeFeatureService.getSessionStatus(app);
 /////////////////// STRIPE FEATURE SERVICE ENDPOINTS END
 
 
 /////////////////////// API CODE ENDS HERE ////////////////////
 
 // EXPORTS
-module.exports = {app};
+module.exports = { app };

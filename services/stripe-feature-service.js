@@ -6,29 +6,37 @@ const stripe = require('stripe')('sk_test_51M0qRCDXPJlr8jYiuJSnkv6EGDgxcfYAVrjpC
 
 //TODO - Implement checkout session API endpoint and Unit Test it.
 const initiateCheckoutSessionPayment = async (app) => {
-    console.log("INITIATE_CHECKOUT_SESSION API ENDPOINT CALLED")
     // The request should contain a list of products chosen by the user
     await app.post("/stripe-feature-service/create-checkout-session/", async (req, res) => {
         // console.log(req.body)
         // TODO: Set up price IDs on stripe developer tools
-        const session = await stripe.checkout.sessions.create({
-            ui_mode: "embedded",
-            line_items: req.body.line_items,
-            customer: req.body.customerID,
-            mode: "payment",
-            success_url: "http://localhost:3000/checkout-complete",
-            cancel_url: "http://localhost:3000/cancel-checkout"
-        })
-            .then(result => {
-                console.log("Checkout Result: ", result)
-                res.status(200).json(result);
+        console.log("INITIATE_CHECKOUT_SESSION API ENDPOINT CALLED")
+        console.log(req.body.line_items)
+        try {
+            const session = await stripe.checkout.sessions.create({
+                ui_mode: "embedded",
+                line_items: req.body.line_items,
+                customer: req.body.customerID,
+                mode: "payment",
+                return_url: "http://localhost:3000/complete-page"
             })
-            .catch(error => {
-                console.log("Error Checkout Failed: ", error);
-                res.status(500).json(error);
-            })
+                .then(result => {
+                    console.log("Checkout Result: ", result)
+                    res.status(200).json(result);
+                })
+                .catch(error => {
+                    console.log("Error Checkout Failed: ", error);
+                    res.status(500).json(error);
+                })
+        }
+        catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
 
-        res.send({clientSecret: session.client_secret})
+
+
+        res.send({ clientSecret: session.client_secret })
     })
 }
 

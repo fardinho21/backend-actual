@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const { clearInterval } = require("timers");
 const { dataBaseSchemas } = require("../db-schemas/database-schemas");
-mongoose.connect("mongodb://localhost:27017/local");
-const userModel = mongoose.model("users", dataBaseSchemas.UserSchema)
+// mongoose.connect("mongodb://localhost:27017/local");
+// const userModel = mongoose.model("users", dataBaseSchemas.UserSchema)
 
 const util = require("node:util");
 const exec = util.promisify(require('node:child_process').exec);
@@ -46,11 +46,11 @@ const jwtAuthenticateToken = (token) => {
 };
 
 const jwtCheckTokenStatuses = () => {
-    return userModel.find({expires: {$lt: new Date()}})
+    // return userModel.find({expires: {$lt: new Date()}})
 };
 
 const jwtInvalidateExpiredTokens  = () => {
-    return userModel.updateMany({expires: {$lt: new Date()}}, {$set: { authentication: "invalid", expires: null }})
+    // return userModel.updateMany({expires: {$lt: new Date()}}, {$set: { authentication: "invalid", expires: null }})
 };
 
 const jwtClearCheckForValidTokensInterval = (interval) => {
@@ -61,23 +61,23 @@ const checkForValidTokensInterval = () =>
 {
     return setInterval(() => {
         console.log("Check for token statuses");
-        userModel.count({expires: {$lt: new Date()}})
-        .then(count => {
-            if (count > 0)
-            {
-                console.log(count)
-                jwtInvalidateExpiredTokens()
-                .then(result => {
-                    console.log("result", result)
-                })
-            }
-            else 
-            {
-                console.log("No user tokens are expired.")
-            }
-        }).catch(err => {
-            console.log("DATABASE_ERROR: ", err)
-        })
+        // userModel.count({expires: {$lt: new Date()}})
+        // .then(count => {
+        //     if (count > 0)
+        //     {
+        //         console.log(count)
+        //         jwtInvalidateExpiredTokens()
+        //         .then(result => {
+        //             console.log("result", result)
+        //         })
+        //     }
+        //     else 
+        //     {
+        //         console.log("No user tokens are expired.")
+        //     }
+        // }).catch(err => {
+        //     console.log("DATABASE_ERROR: ", err)
+        // })
     
     }, 5000);
 }
