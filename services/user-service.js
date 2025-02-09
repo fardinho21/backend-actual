@@ -4,10 +4,6 @@ const { bcryptHelper } = require("./bcrypt-service.js");
 const { stripeFeatureService } = require("./stripe-feature-service.js");
 
 // DATA BASE SCHEMAS AND MODELS
-// const mongoose = require("mongoose");
-const { dataBaseSchemas } = require("../db-schemas/database-schemas.js")
-// mongoose.connect("mongodb://localhost:27017/local");
-// const userModel = mongoose.model("users", dataBaseSchemas.UserSchema);
 
 // SANITIZERS AND VALIDATORS
 const sanitizeHeaderPayload = [
@@ -33,21 +29,7 @@ const createUserRequest = (app) => {
         const result = validationResult(req);
 
         if (result.isEmpty()) {
-            //Check for existing user in database
-            // userModel.exists({userName:req.body.payload.username})
-            // .then(data => {
-            //     if (data == null) 
-            //     {
-            //         next()
-            //     }
-            //     else
-            //     {
-            //         res.status(500).json("Error handling request - Username taken");
-            //     }
-            // }, err => {
-            //     console.log(err)
-            //     res.status(500).json("Error handling request - Database error")
-            // })
+            //Check for existing user in postgresql data-base
         }
         else {
             console.log(result)
@@ -66,13 +48,7 @@ const createUser = async (req, res) => {
 
             // tempPayload.passwordHash = hash;
             // console.log("USER_SERVICE, adding user to database: ", hash)
-            // userModel.insertMany({userName:tempPayload.userName, passwordHash: hash, authentication: "invalid", expires:null})
-            // .then(data => {
-            //     res.status(200).json("User created!");
-            // }, err => {
-            //     console.log(err)
-            //     res.status(500).json("Error handling request - Database error")  
-            // });
+            //TODO: add users to postgresql data-base
 
 
         }, err => {
@@ -88,23 +64,7 @@ const logInUserRequest = (app) => {
         const result = validationResult(req);
 
         if (result.isEmpty()) {
-            // check existing data element in database
-            // userModel.find({userName:req.body.payload.username})
-            // .then(data => {
-            //     if (data.length == 0)
-            //     {
-            //         res.status(500).json("Error handling request - Username does not exist")
-            //     }
-            //     else // next()
-            //     {
-            //         req.body.hash = data[0].passwordHash
-            //         next();
-            //     }
-
-            // }, err => {
-            //     console.log(err)
-            //     res.status(500).json("Error handling request - Database error")
-            // });
+            //TODO: check existing data element in postgresql data-base
         }
         else {
             console.log(result);
@@ -121,13 +81,7 @@ const logInUser = (req, res) => {
                 jwtHelper.jwtGenerateToken(req.body.header, req.body.payload)
                     .then(token => {
                         console.log("API: token expiration ", token.expires)
-                        // userModel.updateOne({userName: req.body.payload.username}, {authentication:token.token, expires: token.expires})
-                        // .then(data => {
-                        //     res.status(200).json({authentication: token})
-                        // }, err => {
-                        //     console.log(err)
-                        //     res.status(500).json("Login Failed - Server error")
-                        // })
+                        //TOOD: set the login status in the postgresql data-base
                     })
             }
             else {
@@ -146,28 +100,7 @@ const logOutUserRequest = (app) => {
         const error = validationResult(req)
 
         if (error.isEmpty()) {
-            // check existing data element in database
-            // userModel.find({userName:req.body.username})
-            // .then(data => {
-            //     if (data.length == 0) {
-            //         res.status(500).json("Error handling request - Username does not exist");
-            //     }
-            //     else {
-            //         console.log("API: logging out user ", data[0].userName);
-            //         if (data[0].authentication == req.body.authentication) 
-            //         {
-            //             req.body.hash = data[0].passwordHash;
-            //             next();
-            //         }
-            //         else
-            //         {
-            //             res.status(500).json("Error handling request - Token invalid.")
-            //         }
-            //     }
-            // }, err => {
-            //     console.log(err)
-            //     res.status(500).json("Error handling request - Database error")
-            // })
+            //TODO: check existing data element in postgresql data-base
         }
         else {
             console.log(error);
@@ -185,13 +118,7 @@ const logOutUser = (req, res) => {
                     .then(authenticity => {
 
                         if (authenticity) {
-                            // userModel.updateOne({ userName: req.body.username }, { authentication: "invalid", expires: null })
-                            // .then(data => {
-                            //     res.status(200).json("Logged out")
-                            // }, err => {
-                            //     console.log(err)
-                            //     res.status(500).json("Login Failed - Database error")
-                            // })
+                            // TODO: set the log-in status for the postgresql data-base
                         }
                         else {
                             res.status(403).json("Error handling request - invalid token");
@@ -215,27 +142,7 @@ const deleteUserRequest = (app) => {
     app.post("/delete-user-request/", sanitizeAuthentication, (req, res, next) => {
         const error = validationResult(req);
         if (error.isEmpty()) {
-            //check exsiting dat element in database
-            // userModel.find({userName:req.body.username})
-            // .then(data => {
-            //     if (data.length == 0)
-            //     {
-            //         res.status(500).json("Error handling request - Username does not exist");
-            //     }
-            //     else
-            //     {
-            //         console.log("Deleting User... ", data[0].userName);
-            //         if (data[0].authentication == req.body.authentication) 
-            //         {
-            //             req.body.hash = data[0].passwordHash;
-            //             next();
-            //         }
-            //         else
-            //         {
-            //             res.status(500).json("Error handling request - Token invalid.");
-            //         }
-            //     }
-            // })
+            //TODO: check exsiting dat element in postgresql data-base
         }
         else {
             console.log(error);
@@ -251,14 +158,7 @@ const deleteUser = (req, res) => {
                 jwtHelper.jwtAuthenticateToken(req.body.authentication)
                     .then(authenticity => {
                         if (authenticity) {
-                            // the request is authentic. deletion request authorized
-                            // userModel.deleteOne({userName: req.body.username})
-                            // .then(data => {
-                            //     res.status(200).json("User Deleted...");
-                            // }, err => {
-                            //     console.log(err)
-                            //     res.status(500).json("Delete Failed - Database error")
-                            // })
+                            //TODO: remove the user from the postgresql data-base
 
                         }
                     })
