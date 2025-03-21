@@ -18,7 +18,7 @@ const initiateCheckoutSessionPayment = async (app) => {
                 line_items: req.body.line_items,
                 customer: req.body.customerID,
                 mode: "payment",
-                return_url: "http://localhost:3000/complete-page"
+                return_url: `http://localhost:3000/complete-page/return?session_id={CHECKOUT_SESSION_ID}`
             })
                 .then(result => {
                     console.log("Checkout Result: ", result)
@@ -34,16 +34,16 @@ const initiateCheckoutSessionPayment = async (app) => {
             res.status(500).json(error)
         }
 
-
-
-        res.send({ clientSecret: session.client_secret })
     })
 }
 
 const getSessionStatus = async (app) => {
     await app.get("/session-status", async (req, res) => {
         const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-        res.send({ status: session.status, customer_email: session.customer_details.email });
+        res.send({
+            status: session.status,
+            customer_email: session.customer_details.email
+        });
     })
 }
 
